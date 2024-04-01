@@ -12,15 +12,18 @@ const LazyLoad = (Component: () => Promise<{ default: React.ComponentType<any> }
 }
 
 const PageHome3 = LazyLoad(() => import("pages/public/PageHome/PageHome3"));
-const Page404 = LazyLoad(() => import("containers/Page404/Page404"));
+const Page404 = LazyLoad(() => import("pages/error/Page404"));
 const FooterNav = LazyLoad(() => import("components/FooterNav"))
 const ScrollToTop = LazyLoad(() => import("./ScrollToTop"));
-const SiteHeader = LazyLoad(() => import("containers/SiteHeader"));
+const SiteHeader = LazyLoad(() => import("components/SiteHeader"));
 const Footer = LazyLoad(() => import("shared/Footer/Footer"));
 const Login = LazyLoad(() => import("pages/auth/Login"));
+const Register = LazyLoad(() => import("pages/auth/Register"));
 export const pages: Page[] = [
   { path: "/", component: PageHome3 },
   { path: "/login", component: Login },
+  { path: "/signup", component: Register },
+  { path: "*", component: Page404 },
 ];
 
 const MyRoutes = () => {

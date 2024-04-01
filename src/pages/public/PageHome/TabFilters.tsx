@@ -19,20 +19,54 @@ const typeOfCategory = [
   },
 ];
 
-const stopPoints = [
+const typeOfTrainer = [
   {
-    name: "Nonstop",
+    name: "Nguyễn Văn A",
   },
   {
-    name: "Up to 1 stops",
+    name: "Nguyễn Văn B",
   },
   {
-    name: "Up to 2 stops",
+    name: "Nguyễn Văn C",
   },
   {
-    name: "Any number of stops",
+    name: "Nguyễn Văn D",
   },
 ];
+
+const typeOfLocation = [
+  {
+    name: "Hà Nội",
+  },
+  {
+    name: "Hồ Chí Minh",
+  },
+  {
+    name: "Đà Nẵng",
+  },
+  {
+    name: "Hải Phòng",
+  }
+];
+
+const typeOfSort = [
+  {
+    name: "Giá (thấp nhất)"
+  },
+  {
+    name: "Giá (cao nhất)"
+  },
+  {
+    name: "Phổ biến nhất"
+  },
+  {
+    name: "Tên (A-Z)"
+  },
+  {
+    name: "Tên (Z-A)"
+  },
+];
+
 
 //
 const TabFilters = () => {
@@ -41,9 +75,10 @@ const TabFilters = () => {
   const [isOnSale, setIsOnSale] = useState(true);
   const [rangePrices, setRangePrices] = useState([100, 5000]);
   const [tripTimes, setTripTimes] = useState(10);
-  const [stopPontsStates, setStopPontsStates] = useState<string[]>([]);
+  const [trainersStates, setTrainersStates] = useState<string[]>([]);
+  const [locationsStates, setLocationsStates] = useState<string[]>([]);
   const [categoriesStates, setCategoriesStates] = useState<string[]>([]);
-
+  const [sortStates, setSortStates] = useState<string[]>([]);
   //
   let [catTimes, setCatTimes] = useState({
     "Take Off": {
@@ -61,10 +96,10 @@ const TabFilters = () => {
   const openModalMoreFilter = () => setisOpenMoreFilter(true);
 
   //
-  const handleChangeStopPoint = (checked: boolean, name: string) => {
+  const handleChangeTrainer = (checked: boolean, name: string) => {
     checked
-      ? setStopPontsStates([...stopPontsStates, name])
-      : setStopPontsStates(stopPontsStates.filter((i) => i !== name));
+      ? setTrainersStates([...trainersStates, name])
+      : setTrainersStates(trainersStates.filter((i) => i !== name));
   };
 
   const handleChangeCategory = (checked: boolean, name: string) => {
@@ -73,6 +108,18 @@ const TabFilters = () => {
       : setCategoriesStates(categoriesStates.filter((i) => i !== name));
   };
 
+  const handleChangeLocation = (checked: boolean, name: string) => {
+    checked
+      ? setLocationsStates([...locationsStates, name])
+      : setLocationsStates(locationsStates.filter((i) => i !== name));
+  };
+
+  const handlerChangeSort = (checked: boolean, name: string) => {
+    // checked only 1
+    checked
+      ? setSortStates([name])
+      : setSortStates(sortStates.filter((i) => i !== name));
+  };
   //
 
   const renderXClear = () => {
@@ -289,7 +336,7 @@ const TabFilters = () => {
     );
   };
 
-  const renderTabsStopPoints = () => {
+  const renderTabsTrainers = () => {
     return (
       <Popover className="relative">
         {({ open, close }) => (
@@ -297,17 +344,17 @@ const TabFilters = () => {
             <Popover.Button
               className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border border-neutral-300 dark:border-neutral-700 focus:outline-none 
               ${open ? "!border-primary-500 " : ""}
-                ${!!stopPontsStates.length
+                ${!!trainersStates.length
                   ? "!border-primary-500 bg-primary-50"
                   : ""
                 }
                 `}
             >
-              <span>Stop points</span>
-              {!stopPontsStates.length ? (
+              <span>Huấn luyện viên</span>
+              {!trainersStates.length ? (
                 <i className="las la-angle-down ml-2"></i>
               ) : (
-                <span onClick={() => setStopPontsStates([])}>
+                <span onClick={() => setTrainersStates([])}>
                   {renderXClear()}
                 </span>
               )}
@@ -324,14 +371,14 @@ const TabFilters = () => {
               <Popover.Panel className="absolute z-10 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-md">
                 <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
                   <div className="relative flex flex-col px-5 py-6 space-y-5">
-                    {stopPoints.map((item) => (
+                    {typeOfTrainer.map((item) => (
                       <div key={item.name} className="">
                         <Checkbox
                           name={item.name}
                           label={item.name}
-                          defaultChecked={stopPontsStates.includes(item.name)}
+                          defaultChecked={trainersStates.includes(item.name)}
                           onChange={(checked) =>
-                            handleChangeStopPoint(checked, item.name)
+                            handleChangeTrainer(checked, item.name)
                           }
                         />
                       </div>
@@ -341,7 +388,7 @@ const TabFilters = () => {
                     <ButtonThird
                       onClick={() => {
                         close();
-                        setStopPontsStates([]);
+                        setTrainersStates([]);
                       }}
                       sizeClass="px-4 py-2 sm:px-5"
                     >
@@ -363,17 +410,28 @@ const TabFilters = () => {
     );
   };
 
-  const renderTabsTimeFlight = () => {
+  const renderTabsLocations = () => {
     return (
       <Popover className="relative">
         {({ open, close }) => (
           <>
             <Popover.Button
-              className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border border-neutral-300 dark:border-neutral-700 focus:outline-none ${open ? "!border-primary-500 " : ""
-                }`}
+              className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border border-neutral-300 dark:border-neutral-700 focus:outline-none 
+              ${open ? "!border-primary-500 " : ""}
+                ${!!locationsStates.length
+                  ? "!border-primary-500 bg-primary-50"
+                  : ""
+                }
+                `}
             >
-              <span>Flight time</span>
-              <i className="las la-angle-down ml-2"></i>
+              <span>Địa chỉ</span>
+              {!locationsStates.length ? (
+                <i className="las la-angle-down ml-2"></i>
+              ) : (
+                <span onClick={() => setLocationsStates([])}>
+                  {renderXClear()}
+                </span>
+              )}
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -385,12 +443,29 @@ const TabFilters = () => {
               leaveTo="opacity-0 translate-y-1"
             >
               <Popover.Panel className="absolute z-10 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-md">
-                <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900   border border-neutral-200 dark:border-neutral-700">
+                <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
                   <div className="relative flex flex-col px-5 py-6 space-y-5">
-                    {renderTabsTimeFlightTab()}
+                    {typeOfLocation.map((item) => (
+                      <div key={item.name} className="">
+                        <Checkbox
+                          name={item.name}
+                          label={item.name}
+                          defaultChecked={locationsStates.includes(item.name)}
+                          onChange={(checked) =>
+                            handleChangeLocation(checked, item.name)
+                          }
+                        />
+                      </div>
+                    ))}
                   </div>
                   <div className="p-5 bg-neutral-50 dark:bg-neutral-900 dark:border-t dark:border-neutral-800 flex items-center justify-between">
-                    <ButtonThird onClick={close} sizeClass="px-4 py-2 sm:px-5">
+                    <ButtonThird
+                      onClick={() => {
+                        close();
+                        setLocationsStates([]);
+                      }}
+                      sizeClass="px-4 py-2 sm:px-5"
+                    >
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
@@ -409,16 +484,28 @@ const TabFilters = () => {
     );
   };
 
-  const renderTabsTripTime = () => {
+  const renderTabsSorts = () => {
     return (
       <Popover className="relative">
         {({ open, close }) => (
           <>
             <Popover.Button
-              className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border border-primary-500 bg-primary-50 text-primary-700 focus:outline-none `}
+              className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border border-neutral-300 dark:border-neutral-700 focus:outline-none 
+              ${open ? "!border-primary-500 " : ""}
+                ${!!sortStates.length
+                  ? "!border-primary-500 bg-primary-50"
+                  : ""
+                }
+                `}
             >
-              <span>less than {tripTimes} hours</span>
-              {renderXClear()}
+              <span>Sắp xếp</span>
+              {!sortStates.length ? (
+                <i className="las la-angle-down ml-2"></i>
+              ) : (
+                <span onClick={() => setSortStates([])}>
+                  {renderXClear()}
+                </span>
+              )}
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -429,25 +516,31 @@ const TabFilters = () => {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="absolute z-10 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 ">
+              <Popover.Panel className="absolute z-10 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-md">
                 <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
-                  <div className="relative flex flex-col px-5 py-6 space-y-8">
-                    <div className="space-y-5">
-                      <div className="font-medium">
-                        Trip time:
-                        <span className="text-sm font-normal ml-1 text-primary-500">{` <${tripTimes} hours`}</span>
+                  <div className="relative flex flex-col px-5 py-6 space-y-5">
+                    {typeOfSort.map((item) => (
+                      <div key={item.name} className="">
+                        <a
+                          onClick={() => handlerChangeSort(true, item.name)}
+                          className={`cursor-default flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50 
+                            ${sortStates.includes(item.name)
+                              ? "bg-gray-100 dark:bg-neutral-700"
+                              : "opacity-80"
+                            }`}                        >
+                          {item.name}
+                        </a>
                       </div>
-
-                      <Slider
-                        min={1}
-                        max={72}
-                        defaultValue={tripTimes}
-                        onChange={(e) => setTripTimes(e as number)}
-                      />
-                    </div>
+                    ))}
                   </div>
                   <div className="p-5 bg-neutral-50 dark:bg-neutral-900 dark:border-t dark:border-neutral-800 flex items-center justify-between">
-                    <ButtonThird onClick={close} sizeClass="px-4 py-2 sm:px-5">
+                    <ButtonThird
+                      onClick={() => {
+                        close();
+                        setSortStates([]);
+                      }}
+                      sizeClass="px-4 py-2 sm:px-5"
+                    >
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
@@ -465,121 +558,12 @@ const TabFilters = () => {
       </Popover>
     );
   };
-
-  const renderTabsPriceRage = () => {
-    return (
-      <Popover className="relative">
-        {({ open, close }) => (
-          <>
-            <Popover.Button
-              className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border border-primary-500 bg-primary-50 text-primary-700 focus:outline-none `}
-            >
-              <span>
-                {`$${convertNumbThousand(
-                  rangePrices[0]
-                )} - $${convertNumbThousand(rangePrices[1])}`}{" "}
-              </span>
-              {renderXClear()}
-            </Popover.Button>
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-200"
-              enterFrom="opacity-0 translate-y-1"
-              enterTo="opacity-100 translate-y-0"
-              leave="transition ease-in duration-150"
-              leaveFrom="opacity-100 translate-y-0"
-              leaveTo="opacity-0 translate-y-1"
-            >
-              <Popover.Panel className="absolute z-10 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 ">
-                <div className="overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
-                  <div className="relative flex flex-col px-5 py-6 space-y-8">
-                    <div className="space-y-5">
-                      <span className="font-medium">Price per person</span>
-                      <Slider
-                        range
-                        min={100}
-                        max={5000}
-                        defaultValue={[rangePrices[0], rangePrices[1]]}
-                        allowCross={false}
-                        onChange={(e) => setRangePrices(e as number[])}
-                      />
-                    </div>
-
-                    <div className="flex justify-between space-x-5">
-                      <div>
-                        <label
-                          htmlFor="minPrice"
-                          className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
-                        >
-                          Min price
-                        </label>
-                        <div className="mt-1 relative rounded-md">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span className="text-neutral-500 sm:text-sm">
-                              $
-                            </span>
-                          </div>
-                          <input
-                            type="text"
-                            name="minPrice"
-                            disabled
-                            id="minPrice"
-                            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
-                            value={rangePrices[0]}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="maxPrice"
-                          className="block text-sm font-medium text-neutral-700 dark:text-neutral-300"
-                        >
-                          Max price
-                        </label>
-                        <div className="mt-1 relative rounded-md">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span className="text-neutral-500 sm:text-sm">
-                              $
-                            </span>
-                          </div>
-                          <input
-                            type="text"
-                            disabled
-                            name="maxPrice"
-                            id="maxPrice"
-                            className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900"
-                            value={rangePrices[1]}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-5 bg-neutral-50 dark:bg-neutral-900 dark:border-t dark:border-neutral-800 flex items-center justify-between">
-                    <ButtonThird onClick={close} sizeClass="px-4 py-2 sm:px-5">
-                      Clear
-                    </ButtonThird>
-                    <ButtonPrimary
-                      onClick={close}
-                      sizeClass="px-4 py-2 sm:px-5"
-                    >
-                      Apply
-                    </ButtonPrimary>
-                  </div>
-                </div>
-              </Popover.Panel>
-            </Transition>
-          </>
-        )}
-      </Popover>
-    );
-  };
-
   const renderTabOnSale = () => {
     return (
       <div
         className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border focus:outline-none cursor-pointer transition-all ${isOnSale
-            ? "border-primary-500 bg-primary-50 text-primary-700"
-            : "border-neutral-300 dark:border-neutral-700"
+          ? "border-primary-500 bg-primary-50 text-primary-700"
+          : "border-neutral-300 dark:border-neutral-700"
           }`}
         onClick={() => setIsOnSale(!isOnSale)}
       >
@@ -701,9 +685,9 @@ const TabFilters = () => {
                       {/* --------- */}
                       {/* ---- */}
                       <div className="py-7">
-                        <h3 className="text-xl font-medium">Stop points</h3>
+                        <h3 className="text-xl font-medium">Huấn luyện viên</h3>
                         <div className="mt-6 relative ">
-                          {renderMoreFilterItem(stopPoints)}
+                          {renderMoreFilterItem(typeOfTrainer)}
                         </div>
                       </div>
 
@@ -833,17 +817,18 @@ const TabFilters = () => {
       {/* FOR DESKTOP */}
       <div className="hidden lg:flex space-x-4">
         {renderTabsTypeOfCategories()}
-        {/* {renderTabsTripTime()} */}
-        {renderTabsStopPoints()}
-        {/* {renderTabsPriceRage()} */}
-        {renderTabsTimeFlight()}
-        {renderTabOnSale()}
+        {renderTabsTrainers()}
+        {/* {renderTabsTimeFlight()} */}
+        {renderTabsLocations()}
+        {/* {renderTabOnSale()} */}
+        {renderTabsSorts()}
       </div>
 
       {/* FOR RESPONSIVE MOBILE */}
       <div className="flex lg:hidden space-x-4">
         {renderTabMobileFilter()}
-        {renderTabOnSale()}
+        {/* {renderTabOnSale()} */}
+        {renderTabsSorts()}
       </div>
     </div>
   );

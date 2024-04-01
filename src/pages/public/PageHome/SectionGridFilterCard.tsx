@@ -1,74 +1,23 @@
-import React, { FC } from "react";
-import TabFilters from "./TabFilters";
+import { DEMO_EXPERIENCES_LISTINGS } from "assets/data/listings";
+import { ExperiencesDataType, StayDataType } from "assets/data/types";
+import ExperiencesCard from "components/ExperiencesCard/ExperiencesCard";
 import Heading2 from "components/Heading/Heading2";
-import FlightCard, { FlightCardProps } from "components/FlightCard/FlightCard";
-import ButtonPrimary from "shared/Button/ButtonPrimary";
+import { FC } from "react";
+import Pagination from "shared/Pagination/Pagination";
+import TabFilters from "./TabFilters";
 
 export interface SectionGridFilterCardProps {
   className?: string;
+  data?: StayDataType[];
 }
 
-const DEMO_DATA: FlightCardProps["data"][] = [
-  {
-    id: "1",
-    price: "$4,100",
-    airlines: {
-      logo: "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
-      name: "Korean Air",
-    },
-  },
-  {
-    id: "2",
-    price: "$3,380",
-    airlines: {
-      logo: "https://www.gstatic.com/flights/airline_logos/70px/SQ.png",
-      name: "Singapore Airlines",
-    },
-  },
-  {
-    id: "3",
-    price: "$2,380",
-    airlines: {
-      logo: "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
-      name: "Philippine Airlines",
-    },
-  },
-  {
-    id: "1",
-    price: "$4,100",
-    airlines: {
-      logo: "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
-      name: "Korean Air",
-    },
-  },
-  {
-    id: "2",
-    price: "$3,380",
-    airlines: {
-      logo: "https://www.gstatic.com/flights/airline_logos/70px/SQ.png",
-      name: "Singapore Airlines",
-    },
-  },
-  {
-    id: "1",
-    price: "$4,100",
-    airlines: {
-      logo: "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
-      name: "Korean Air",
-    },
-  },
-  {
-    id: "2",
-    price: "$3,380",
-    airlines: {
-      logo: "https://www.gstatic.com/flights/airline_logos/70px/SQ.png",
-      name: "Singapore Airlines",
-    },
-  },
-];
+const DEMO_DATA: ExperiencesDataType[] = DEMO_EXPERIENCES_LISTINGS.filter(
+  (_, i) => i < 8
+);
 
 const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   className = "",
+  data = DEMO_DATA,
 }) => {
   return (
     <div
@@ -76,27 +25,25 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
       data-nc-id="SectionGridFilterCard"
     >
       <Heading2
-        heading="Singapore - Tokyo"
+        heading="Dịch vụ"
         subHeading={
           <span className="block text-neutral-500 dark:text-neutral-400 mt-3">
-            22 flights
-            <span className="mx-2">·</span>
-            round trip
-            <span className="mx-2">·</span>2 Guests
+            50+ Dịch vụ
+            <span className="mx-2">·</span>100+ Huấn luyện viên
           </span>
         }
       />
+
       <div className="mb-8 lg:mb-11">
         <TabFilters />
       </div>
-      <div className="lg:p-10 lg:bg-neutral-50 lg:dark:bg-black/20 grid grid-cols-1 gap-6  rounded-3xl">
-        {DEMO_DATA.map((item, index) => (
-          <FlightCard key={index} data={item} />
+      <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {data.map((stay) => (
+          <ExperiencesCard key={stay.id} data={stay} />
         ))}
-
-        <div className="flex mt-12 justify-center items-center">
-          <ButtonPrimary loading>Show more</ButtonPrimary>
-        </div>
+      </div>
+      <div className="flex mt-16 justify-center items-center">
+        <Pagination />
       </div>
     </div>
   );
