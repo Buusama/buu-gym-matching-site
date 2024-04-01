@@ -15,74 +15,74 @@ const DEMO_CATS: TaxonomyType[] = [
   {
     id: "1",
     href: "#",
-    name: "New Yourk",
+    name: "Boxing",
     taxonomy: "category",
     count: 1882,
     thumbnail:
-      "https://images.pexels.com/photos/64271/queen-of-liberty-statue-of-liberty-new-york-liberty-statue-64271.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    "https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2020/05/boxer-training-bag.jpg?quality=86&strip=all"
   },
   {
     id: "2",
     href: "#",
-    name: "Singapore",
+    name: "Caradio",
     taxonomy: "category",
     count: 8288,
     thumbnail:
-      "https://images.pexels.com/photos/7740160/pexels-photo-7740160.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    "https://youfit.com/wp-content/uploads/2022/09/cardio-workouts-at-the-gym.png"
   },
   {
     id: "2",
     href: "#",
-    name: "Paris",
+    name: "Cycling",
     taxonomy: "category",
     count: 1288,
     thumbnail:
-      "https://images.pexels.com/photos/739407/pexels-photo-739407.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    "https://www.siroko.com/blog/c/app/uploads/2021/07/fitness_21858fa8-864f-404f-9bf5-c2a7d5f72ed7-1440x900.jpg"
   },
   {
     id: "2",
     href: "#",
-    name: "London",
+    name: "Dumbblelling",
     taxonomy: "category",
     count: 112,
     thumbnail:
-      "https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    "https://shtheme.org/demosd/gymee/wp-content/uploads/2020/06/gallery-12.jpg"
   },
   {
     id: "2",
     href: "#",
-    name: "Tokyo",
+    name: "Fitness",
     taxonomy: "category",
     count: 323,
     thumbnail:
-      "https://images.pexels.com/photos/4151484/pexels-photo-4151484.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    "https://img.freepik.com/free-photo/young-fitness-man-studio_7502-5008.jpg"
   },
   {
     id: "2",
     href: "#",
-    name: "Maldives",
+    name: "Gym",
     taxonomy: "category",
     count: 2223,
     thumbnail:
-      "https://images.pexels.com/photos/3250613/pexels-photo-3250613.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    "https://shtheme.org/demosd/gymee/wp-content/uploads/2020/06/gallery-13.jpg"
   },
   {
     id: "11",
     href: "#",
-    name: "New Yourk",
+    name: "Trainer",
     taxonomy: "category",
     count: 1775,
     thumbnail:
-      "https://images.pexels.com/photos/64271/queen-of-liberty-statue-of-liberty-new-york-liberty-statue-64271.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+    "https://athleticsweekly.com/wp-content/uploads/2020/11/PT-image-via-OriGym.jpg"
   },
   {
     id: "222",
     href: "#",
-    name: "Singapore",
+    name: "Yoga",
     taxonomy: "category",
     count: 1288,
     thumbnail:
-      "https://images.pexels.com/photos/7740160/pexels-photo-7740160.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+    "https://static.toiimg.com/photo/102565262.cms"
   },
 ];
 
@@ -106,10 +106,10 @@ const SectionGridCategoryBox: React.FC<SectionGridCategoryBoxProps> = ({
   return (
     <div className={`nc-SectionGridCategoryBox relative ${className}`}>
       <Heading
-        desc="Discover great places near where you live"
+        desc="Các dịch vụ hàng đầu của chúng tôi dành cho bạn"
         isCenter={headingCenter}
       >
-        Explore nearby
+        Khám phá dịch vụ
       </Heading>
       <div className={`grid ${gridClassName} gap-5 sm:gap-6 md:gap-8`}>
         {categories.map((item, i) => (

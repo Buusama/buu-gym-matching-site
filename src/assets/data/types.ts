@@ -138,3 +138,30 @@ export interface CarDataType {
     lng: number;
   };
 }
+
+export interface ServiceDataType {
+  id: string | number;
+  author: AuthorType;
+  date: string;
+  duration: string;
+  href: string;
+  title: string;
+  featuredImage: string;
+  commentCount: number;
+  viewCount: number;
+  address: string;
+  reviewStart: number;
+  reviewCount: number;
+  like: boolean;
+  galleryImgs: string[];
+  price: string;
+  listingCategory: TaxonomyType;
+  seats: number;
+  gearshift: string;
+  saleOff?: string | null;
+  isAds: boolean | null;
+  map: {
+    lat: number;
+    lng: number;
+  };
+}

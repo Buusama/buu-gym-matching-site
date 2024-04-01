@@ -1,21 +1,22 @@
 import React, { FC } from "react";
 import GallerySlider from "components/GallerySlider/GallerySlider";
-import { DEMO_EXPERIENCES_LISTINGS } from "assets/data/listings";
-import { ExperiencesDataType } from "assets/data/types";
+import { ServiceDataType } from "assets/data/types";
 import StartRating from "components/StartRating/StartRating";
 import { Link } from "react-router-dom";
 import BtnLikeIcon from "components/BtnLikeIcon/BtnLikeIcon";
 import SaleOffBadge from "components/SaleOffBadge/SaleOffBadge";
 import Badge from "shared/Badge/Badge";
+import { DEMO_SERVICES_LISTINGS } from "assets/data/listings";
+import { duration } from "moment";
 
 export interface ServicesCardProps {
   className?: string;
   ratioClass?: string;
-  data?: ExperiencesDataType;
+  data?: ServiceDataType;
   size?: "default" | "small";
 }
 
-const DEMO_DATA: ExperiencesDataType = DEMO_EXPERIENCES_LISTINGS[0];
+const DEMO_DATA: ServiceDataType = DEMO_SERVICES_LISTINGS[0];
 
 const ServiceCard: FC<ServicesCardProps> = ({
   size = "default",
@@ -26,6 +27,7 @@ const ServiceCard: FC<ServicesCardProps> = ({
   const {
     galleryImgs,
     address,
+    duration,
     title,
     href,
     like,
@@ -58,36 +60,16 @@ const ServiceCard: FC<ServicesCardProps> = ({
         <div className="space-y-2">
           <div className="flex items-center text-neutral-500 dark:text-neutral-400 text-sm space-x-2">
             {size === "default" && (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
+              <svg className="w-6 h-6 text-neutral-300 dark:text-neutral-6000" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.33333 8.16667V3.5M18.6667 8.16667V3.5M8.16667 12.8333H19.8333M5.83333 24.5H22.1667C23.4553 24.5 24.5 23.4553 24.5 22.1667V8.16667C24.5 6.878 23.4553 5.83333 22.1667 5.83333H5.83333C4.54467 5.83333 3.5 6.878 3.5 8.16667V22.1667C3.5 23.4553 4.54467 24.5 5.83333 24.5Z" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             )}
-            <span className="">{address}</span>
+            <span className="">{duration}</span>
           </div>
 
           <div className="flex items-center space-x-2">
             {isAds && <Badge name="ADS" color="green" />}
             <h2
-              className={` font-medium capitalize ${
-                size === "default" ? "text-base" : "text-base"
-              }`}
+              className={` font-medium capitalize ${size === "default" ? "text-base" : "text-base"
+                }`}
             >
               <span className="line-clamp-1">{title}</span>
             </h2>

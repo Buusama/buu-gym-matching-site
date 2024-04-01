@@ -14,10 +14,7 @@ let OPTIONS = {
 };
 let OBSERVER: IntersectionObserver | null = null;
 const PAGES_HIDE_HEADER_BORDER: PathName[] = [
-  "/home-3",
-  "/listing-car-detail",
-  "/listing-experiences-detail",
-  "/listing-stay-detail",
+  "/home-3"
 ];
 
 const SiteHeader = () => {
@@ -36,9 +33,6 @@ const SiteHeader = () => {
   };
 
   useEffect(() => {
-    if (location.pathname === "/home-2") {
-      setHeaderSelected("Header 2");
-    }
     if (location.pathname === "/") {
       setHeaderSelected("Header 1");
     }
@@ -65,11 +59,6 @@ const SiteHeader = () => {
     switch (headerSelected) {
       case "Header 1":
         return <Header className={headerClassName} navType="MainNav1" />;
-      case "Header 2":
-        return <Header className={headerClassName} navType="MainNav2" />;
-      case "Header 3":
-        return <Header3 className={headerClassName} />;
-
       default:
         return <Header3 className={headerClassName} />;
     }

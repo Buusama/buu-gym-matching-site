@@ -60,135 +60,17 @@ const megaMenuDemo: MegamenuItem[] = [
   },
 ];
 
-const demoChildMenus: NavItemType[] = [
-  {
-    id: ncNanoId(),
-    href: "/",
-    name: "Online Booking",
-  },
-  {
-    id: ncNanoId(),
-    href: "/home-2",
-    name: "Real Estate",
-    isNew: true,
-  },
-  {
-    id: ncNanoId(),
-    href: "/home-3",
-    name: "Home - 3",
-    isNew: true,
-  },
-];
-
-const otherPageChildMenus: NavItemType[] = [
-  {
-    id: ncNanoId(),
-    href: "/blog",
-    name: "Blog Page",
-  },
-  {
-    id: ncNanoId(),
-    href: "/blog-single",
-    name: "Blog Single",
-  },
-  {
-    id: ncNanoId(),
-    href: "/about",
-    name: "About",
-  },
-  {
-    id: ncNanoId(),
-    href: "/contact",
-    name: "Contact us",
-  },
-  {
-    id: ncNanoId(),
-    href: "/login",
-    name: "Login",
-  },
-  {
-    id: ncNanoId(),
-    href: "/signup",
-    name: "Signup",
-  },
-  {
-    id: ncNanoId(),
-    href: "/subscription",
-    name: "Subscription",
-  },
-];
-
-const templatesChildrenMenus: NavItemType[] = [
-  {
-    id: ncNanoId(),
-    href: "/add-listing-1",
-    name: "Add Listings",
-    type: "dropdown",
-    children: [
-      {
-        id: ncNanoId(),
-        href: "/add-listing-1",
-        name: "Add Listings 1",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-2",
-        name: "Add Listings 2",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-3",
-        name: "Add Listings 3",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-4",
-        name: "Add Listings 4",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-5",
-        name: "Add Listings 5",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-6",
-        name: "Add Listings 6",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-7",
-        name: "Add Listings 7",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-8",
-        name: "Add Listings 8",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-9",
-        name: "Add Listings 9",
-      },
-      {
-        id: ncNanoId(),
-        href: "/add-listing-10",
-        name: "Add Listings 10",
-      },
-    ],
-  },
-  //
-  { id: ncNanoId(), href: "/checkout", name: "Checkout" },
-  { id: ncNanoId(), href: "/pay-done", name: "Pay done" },
-  //
-  { id: ncNanoId(), href: "/author", name: "Author Page" },
-  { id: ncNanoId(), href: "/account", name: "Account Page" },
-];
 
 export const NAVIGATION_DEMO: NavItemType[] = [
   {
     id: ncNanoId(),
     href: "/",
+    name: "Trang chủ",
+    // type: "dropdown",
+  },
+  {
+    id: ncNanoId(),
+    href: "/services",
     name: "Dịch vụ",
     // type: "dropdown",
     // children: demoChildMenus,
@@ -199,7 +81,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     href: "/unique_id_",
     name: "Địa chỉ",
     // type: "megaMenu",
-    megaMenu: megaMenuDemo,
+    // megaMenu: megaMenuDemo,
   },
   {
     id: ncNanoId(),
@@ -297,15 +179,15 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     id: ncNanoId(),
     href: "/author",
     name: "Lịch tập luyện",
-    type: "dropdown",
-    children: templatesChildrenMenus,
+    // type: "dropdown",
+    // children: templatesChildrenMenus,
   },
 
   {
     id: ncNanoId(),
     href: "/blog",
     name: "Other pages",
-    type: "dropdown",
-    children: otherPageChildMenus,
+    // type: "dropdown",
+    // children: otherPageChildMenus,
   },
 ];

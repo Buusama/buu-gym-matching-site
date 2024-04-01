@@ -5,7 +5,8 @@ import {
   DEMO_STAY_CATEGORIES,
   DEMO_EXPERIENCES_CATEGORIES,
 } from "./taxonomies";
-import { CarDataType, ExperiencesDataType, StayDataType } from "./types";
+import __servicesListing from "./jsons/__servicesListing.json";
+import { CarDataType, ExperiencesDataType, ServiceDataType, StayDataType } from "./types";
 import { DEMO_AUTHORS } from "./authors";
 import car1 from "images/cars/1.png";
 import car2 from "images/cars/2.png";
@@ -93,4 +94,22 @@ const DEMO_CAR_LISTINGS = __carsListing.map((post, index): CarDataType => {
   };
 });
 
-export { DEMO_STAY_LISTINGS, DEMO_EXPERIENCES_LISTINGS, DEMO_CAR_LISTINGS };
+const DEMO_SERVICES_LISTINGS = __servicesListing.map((post, index): ServiceDataType => {
+  //  ##########  GET CATEGORY BY CAT ID ######## //
+  const category = DEMO_EXPERIENCES_CATEGORIES.filter(
+    (taxonomy) => taxonomy.id === post.listingCategoryId
+  )[0];
+
+  return {
+    ...post,
+    id: `experiencesListing_${index}_`,
+    saleOff: !index ? "-20% today" : post.saleOff,
+    isAds: !index ? true : post.isAds,
+    author: DEMO_AUTHORS.filter((user) => user.id === post.authorId)[0],
+    listingCategory: category,
+    seats: 1,
+    gearshift: 'Auto',
+  };
+});
+
+export { DEMO_STAY_LISTINGS, DEMO_EXPERIENCES_LISTINGS, DEMO_CAR_LISTINGS, DEMO_SERVICES_LISTINGS };

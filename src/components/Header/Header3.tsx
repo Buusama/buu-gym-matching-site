@@ -1,16 +1,15 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import Logo from "shared/Logo/Logo";
-import useOutsideAlerter from "hooks/useOutsideAlerter";
 import HeroSearchForm, {
   SearchTab,
 } from "components/HeroSearchForm2/HeroSearchForm";
-import { Link, useLocation } from "react-router-dom";
-import SwitchDarkMode from "shared/SwitchDarkMode/SwitchDarkMode";
-import NotifyDropdown from "./NotifyDropdown";
-import AvatarDropdown from "./AvatarDropdown";
-import MenuBar from "shared/MenuBar/MenuBar";
 import { StaySearchFormFields } from "components/HeroSearchForm2/StaySearchForm";
-import HeroSearchForm2MobileFactory from "components/HeroSearchForm2Mobile/HeroSearchForm2MobileFactory";
+import useOutsideAlerter from "hooks/useOutsideAlerter";
+import { FC, useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import Logo from "shared/Logo/Logo";
+import MenuBar from "shared/MenuBar/MenuBar";
+import SwitchDarkMode from "shared/SwitchDarkMode/SwitchDarkMode";
+import AvatarDropdown from "./AvatarDropdown";
+import NotifyDropdown from "./NotifyDropdown";
 
 interface Header3Props {
   className?: string;
@@ -173,9 +172,6 @@ const Header3: FC<Header3Props> = ({ className = "" }) => {
             <div className="flex-[2] lg:flex-none mx-auto">
               <div className="hidden lg:block">
                 {renderButtonOpenHeroSearch()}
-              </div>
-              <div className="lg:hidden w-full max-w-lg mx-auto">
-                <HeroSearchForm2MobileFactory />
               </div>
               {renderHeroSearch()}
             </div>
