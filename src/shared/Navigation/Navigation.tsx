@@ -1,12 +1,17 @@
-import React from "react";
-import NavigationItem from "./NavigationItem";
 import { NAVIGATION_DEMO } from "assets/data/navigation";
+import { useAppSelector } from "states";
+import { selectAuthUserInfo } from "states/slices/auth";
+import NavigationItem from "./NavigationItem";
 
 function Navigation() {
+  const user = useAppSelector(selectAuthUserInfo);
+
   return (
     <ul className="nc-Navigation hidden lg:flex lg:flex-wrap lg:items-center lg:space-x-1 relative">
       {NAVIGATION_DEMO.map((item) => (
-        <NavigationItem key={item.id} menuItem={item} />
+        // if user is not logged in, hide the item.protected= true
+        item.protected && !user ? null :
+          <NavigationItem key={item.id} menuItem={item} />
       ))}
     </ul>
   );

@@ -1,11 +1,16 @@
-import React, { FC } from "react";
 import facebookSvg from "images/Facebook.svg";
-import twitterSvg from "images/Twitter.svg";
 import googleSvg from "images/Google.svg";
-import { Helmet } from "react-helmet";
-import Input from "shared/Input/Input";
-import { Link } from "react-router-dom";
+import twitterSvg from "images/Twitter.svg";
+import { FC } from "react";
+// import { Helmet } from "react-helmet";
+import { useForm, } from 'react-hook-form';
+import { Link, useNavigate } from "react-router-dom";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
+import Input from "shared/Input/Input";
+import { useAppDispatch, useAppSelector } from "states";
+import { fetchUser } from "states/slices/auth";
+import { login, selectAuthFormError, selectAuthFormStatus, selectAuthFormValue } from "states/slices/authForm";
+import { Alert } from "shared/Alert/Alert";
 export interface PageLoginProps {
   className?: string;
 }
@@ -29,11 +34,37 @@ const loginSocials = [
 ];
 
 const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
+  const dispatch = useAppDispatch();
+  const formValues = useAppSelector(selectAuthFormValue);
+  const formStatus = useAppSelector(selectAuthFormStatus);
+  const formError = useAppSelector(selectAuthFormError);
+  const { register, reset, handleSubmit } = useForm()
+  const navigate = useNavigate();
+
+  const submitForm = (data: any) => {
+    dispatch(login(data)).then((res: any) => {
+      console.log(res);
+      if (res.payload) {
+        dispatch(fetchUser());
+        navigate('/');
+        reset();
+        // Alert 
+        Alert({
+          type: 'success',
+          children: 'Login successfully',
+        });
+      }
+      else {
+        console.error("Login failed");
+      }
+    })
+  };
+
   return (
     <div className={`nc-PageLogin ${className}`} data-nc-id="PageLogin">
-      <Helmet>
+      {/* <Helmet>
         <title>Login || Booking React Template</title>
-      </Helmet>
+      </Helmet> */}
       <div className="container mb-24 lg:mb-32">
         <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
           Login
@@ -65,15 +96,16 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
             <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
           </div>
           {/* FORM */}
-          <form className="grid grid-cols-1 gap-6" action="#" method="post">
+          <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit(submitForm)}>
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
                 Email address
               </span>
               <Input
                 type="email"
-                placeholder="example@example.com"
                 className="mt-1"
+                value={formValues.email}
+                {...register('email')}
               />
             </label>
             <label className="block">
@@ -83,9 +115,19 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
                   Forgot password?
                 </Link>
               </span>
-              <Input type="password" className="mt-1" />
+              <Input
+                type="password"
+                className="mt-1"
+                value={formValues.password}
+                {...register('password')}
+              />
             </label>
-            <ButtonPrimary type="submit">Continue</ButtonPrimary>
+            <ButtonPrimary
+              type="submit"
+              disabled={formStatus === "loading"}
+            >
+              Continue
+            </ButtonPrimary>
           </form>
 
           {/* ==== */}

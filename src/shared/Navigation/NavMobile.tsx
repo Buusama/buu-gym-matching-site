@@ -10,6 +10,8 @@ import SocialsList from "shared/SocialsList/SocialsList";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import SwitchDarkMode from "shared/SwitchDarkMode/SwitchDarkMode";
 import LangDropdown from "components/Header/LangDropdown";
+import { useAppSelector } from "states";
+import { selectAuthUserInfo } from "states/slices/auth";
 
 export interface NavMobileProps {
   data?: NavItemType[];
@@ -20,6 +22,8 @@ const NavMobile: React.FC<NavMobileProps> = ({
   data = NAVIGATION_DEMO,
   onClickClose,
 }) => {
+  const user = useAppSelector(selectAuthUserInfo);
+
   const _renderMenuChild = (item: NavItemType) => {
     return (
       <ul className="nav-mobile-sub-menu pl-6 pb-1 text-base">
@@ -31,8 +35,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
                 pathname: i.href || undefined,
               }}
               className={({ isActive }) =>
-                `flex px-4 text-neutral-900 dark:text-neutral-200 text-sm font-medium rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 mt-0.5 ${
-                  isActive ? "text-secondary" : ""
+                `flex px-4 text-neutral-900 dark:text-neutral-200 text-sm font-medium rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 mt-0.5 ${isActive ? "text-secondary" : ""
                 }`
               }
             >
@@ -69,45 +72,45 @@ const NavMobile: React.FC<NavMobileProps> = ({
 
   const _renderItem = (item: NavItemType, index: number) => {
     return (
-      <Disclosure
-        key={item.id}
-        as="li"
-        className="text-neutral-900 dark:text-white"
-      >
-        <NavLink
-          end
-          className={({ isActive }) =>
-            `flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg ${
-              isActive ? "text-secondary" : ""
-            }`
-          }
-          to={{
-            pathname: item.href || undefined,
-          }}
+      item.protected && !user ? null :
+        <Disclosure
+          key={item.id}
+          as="li"
+          className="text-neutral-900 dark:text-white"
         >
-          <span
-            className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}
+          <NavLink
+            end
+            className={({ isActive }) =>
+              `flex w-full px-4 font-medium uppercase tracking-wide text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg ${isActive ? "text-secondary" : ""
+              }`
+            }
+            to={{
+              pathname: item.href || undefined,
+            }}
           >
-            {item.name}
-          </span>
-          {item.children && (
-            <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
-              <Disclosure.Button
-                as="span"
-                className="py-2.5 flex items-center justify-end flex-1 "
-              >
-                <ChevronDownIcon
-                  className="ml-2 h-4 w-4 text-neutral-500"
-                  aria-hidden="true"
-                />
-              </Disclosure.Button>
+            <span
+              className={`py-2.5 pr-3 ${!item.children ? "block w-full" : ""}`}
+            >
+              {item.name}
             </span>
+            {item.children && (
+              <span className="flex-1 flex" onClick={(e) => e.preventDefault()}>
+                <Disclosure.Button
+                  as="span"
+                  className="py-2.5 flex items-center justify-end flex-1 "
+                >
+                  <ChevronDownIcon
+                    className="ml-2 h-4 w-4 text-neutral-500"
+                    aria-hidden="true"
+                  />
+                </Disclosure.Button>
+              </span>
+            )}
+          </NavLink>
+          {item.children && (
+            <Disclosure.Panel>{_renderMenuChild(item)}</Disclosure.Panel>
           )}
-        </NavLink>
-        {item.children && (
-          <Disclosure.Panel>{_renderMenuChild(item)}</Disclosure.Panel>
-        )}
-      </Disclosure>
+        </Disclosure>
     );
   };
 
@@ -117,8 +120,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
         <Logo />
         <div className="flex flex-col mt-5 text-neutral-700 dark:text-neutral-300 text-sm">
           <span>
-            Discover the most outstanding articles on all topics of life. Write
-            your stories and share them
+            Hệ thống phòng gym hiện đại, đẳng cấp nhất tại Việt Nam
           </span>
 
           <div className="flex justify-between items-center mt-4">
@@ -142,10 +144,13 @@ const NavMobile: React.FC<NavMobileProps> = ({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <ButtonPrimary>Get Template</ButtonPrimary>
+          {/* if user logined not show button */}
+          {user ? null : (
+            <ButtonPrimary href="/login">Đăng nhập</ButtonPrimary>
+          )}
         </a>
 
-        <LangDropdown panelClassName="z-10 w-screen max-w-[280px] px-4 mb-3 -right-3 bottom-full sm:px-0" />
+        {/* <LangDropdown panelClassName="z-10 w-screen max-w-[280px] px-4 mb-3 -right-3 bottom-full sm:px-0" /> */}
       </div>
     </div>
   );

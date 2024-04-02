@@ -20,6 +20,7 @@ export interface NavItemType {
   children?: NavItemType[];
   megaMenu?: MegamenuItem[];
   type?: "dropdown" | "megaMenu" | "none";
+  protected?: boolean;
 }
 
 export interface NavigationItemProps {

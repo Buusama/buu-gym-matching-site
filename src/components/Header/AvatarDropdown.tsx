@@ -1,54 +1,52 @@
 import { Popover, Transition } from "@headlessui/react";
 import {
-  UserCircleIcon,
-  ChatBubbleBottomCenterTextIcon,
-  HeartIcon,
-  HomeIcon,
   ArrowRightOnRectangleIcon,
-  LifebuoyIcon,
+  UserCircleIcon,
+  Cog6ToothIcon,
+  QuestionMarkCircleIcon
 } from "@heroicons/react/24/outline";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Avatar from "shared/Avatar/Avatar";
+import { useAppDispatch, useAppSelector } from "states";
+import { logout, selectAuthUserInfo } from "states/slices/auth";
+
 
 const solutions = [
   {
-    name: "Account",
-    href: "/author",
+    name: "Tài khoản",
+    href: "/profile",
     icon: UserCircleIcon,
   },
   {
-    name: "Messages",
-    href: "##",
-    icon: ChatBubbleBottomCenterTextIcon,
+    name: "Cài đặt",
+    href: "/settings",
+    icon: Cog6ToothIcon,
   },
   {
-    name: "Wishlists",
-    href: "/account-savelists",
-    icon: HeartIcon,
-  },
-  {
-    name: "Booking",
-    href: "##",
-    icon: HomeIcon,
-  },
+    name: "Trợ giúp",
+    href: "/help",
+    icon: QuestionMarkCircleIcon,
+  }
 ];
 
 const solutionsFoot = [
   {
-    name: "Help",
-    href: "##",
-    icon: LifebuoyIcon,
-  },
-
-  {
-    name: "Logout",
-    href: "##",
+    name: "Đăng xuất",
+    action: "logoutAction",
+    href: "/",
     icon: ArrowRightOnRectangleIcon,
   },
 ];
 
 export default function AvatarDropdown() {
+  const user = useAppSelector(selectAuthUserInfo);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const logoutAction = () => {
+    dispatch(logout());
+  }
+
   return (
     <div className="AvatarDropdown">
       <Popover className="relative">
@@ -57,7 +55,7 @@ export default function AvatarDropdown() {
             <Popover.Button
               className={`inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
-              <Avatar sizeClass="w-8 h-8 sm:w-9 sm:h-9" />
+              <Avatar sizeClass="w-8 h-8 sm:w-9 sm:h-9" imgUrl={user?.avatar} />
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -92,6 +90,7 @@ export default function AvatarDropdown() {
                       <a
                         key={index}
                         href={item.href}
+                        onClick={item.action === "logoutAction" ? logoutAction : () => { }}
                         className="flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50"
                       >
                         <div className="flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300">

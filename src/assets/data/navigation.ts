@@ -1,71 +1,12 @@
-import { MegamenuItem, NavItemType } from "shared/Navigation/NavigationItem";
+import { NavItemType } from "shared/Navigation/NavigationItem";
 import ncNanoId from "utils/ncNanoId";
-import __megamenu from "./jsons/__megamenu.json";
-
-const megaMenuDemo: MegamenuItem[] = [
-  {
-    id: ncNanoId(),
-    image:
-      "https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    title: "Company",
-    items: __megamenu.map((i) => ({
-      id: ncNanoId(),
-      href: "/unique_id_",
-      name: i.Company,
-    })),
-  },
-  {
-    id: ncNanoId(),
-    image:
-      "https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    title: "App Name",
-    items: __megamenu.map((i) => ({
-      id: ncNanoId(),
-      href: "/unique_id_",
-      name: i.AppName,
-    })),
-  },
-  {
-    id: ncNanoId(),
-    image:
-      "https://images.pexels.com/photos/5059013/pexels-photo-5059013.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    title: "City",
-    items: __megamenu.map((i) => ({
-      id: ncNanoId(),
-      href: "/unique_id_",
-      name: i.City,
-    })),
-  },
-  {
-    id: ncNanoId(),
-    image:
-      "https://images.pexels.com/photos/5159141/pexels-photo-5159141.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    title: "Contruction",
-    items: __megamenu.map((i) => ({
-      id: ncNanoId(),
-      href: "/unique_id_",
-      name: i.Contruction,
-    })),
-  },
-  {
-    id: ncNanoId(),
-    image:
-      "https://images.pexels.com/photos/7473041/pexels-photo-7473041.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    title: "Country",
-    items: __megamenu.map((i) => ({
-      id: ncNanoId(),
-      href: "/unique_id_",
-      name: i.Country,
-    })),
-  },
-];
-
 
 export const NAVIGATION_DEMO: NavItemType[] = [
   {
     id: ncNanoId(),
     href: "/",
     name: "Trang chủ",
+    protected: false,
     // type: "dropdown",
   },
   {
@@ -74,119 +15,38 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     name: "Dịch vụ",
     // type: "dropdown",
     // children: demoChildMenus,
-    isNew: true,
+    // isNew: true,
+    protected: false,
+
   },
   {
     id: ncNanoId(),
-    href: "/unique_id_",
-    name: "Địa chỉ",
+    href: "/trainers",
+    name: "Huấn luyện viên",
+    protected: false,
     // type: "megaMenu",
     // megaMenu: megaMenuDemo,
   },
   {
     id: ncNanoId(),
-    href: "/listing-stay",
+    href: "/booking",
     name: "Đặt lịch ngay",
-    // type: "dropdown",
-    isNew: true,
-    children: [
-      {
-        id: ncNanoId(),
-        href: "/listing-stay",
-        name: "Stay listing",
-        type: "dropdown",
-        children: [
-          { id: ncNanoId(), href: "/listing-stay", name: "Stay page" },
-          {
-            id: ncNanoId(),
-            href: "/listing-stay-map",
-            name: "Stay page (map)",
-          },
-          { id: ncNanoId(), href: "/listing-stay-detail", name: "Stay Detail" },
-        ],
-      },
-
-      //
-      {
-        id: ncNanoId(),
-        href: "/listing-experiences",
-        name: "Experiences listing",
-        type: "dropdown",
-        children: [
-          {
-            id: ncNanoId(),
-            href: "/listing-experiences",
-            name: "Experiences page",
-          },
-          {
-            id: ncNanoId(),
-            href: "/listing-experiences-map",
-            name: "Experiences page (map)",
-          },
-          {
-            id: ncNanoId(),
-            href: "/listing-experiences-detail",
-            name: "Experiences Detail",
-          },
-        ],
-      },
-
-      //
-      {
-        id: ncNanoId(),
-        href: "/listing-car",
-        name: "Cars listing",
-        type: "dropdown",
-        children: [
-          { id: ncNanoId(), href: "/listing-car", name: "Cars page" },
-          { id: ncNanoId(), href: "/listing-car-map", name: "Cars page (map)" },
-          { id: ncNanoId(), href: "/listing-car-detail", name: "Car Detail" },
-        ],
-      },
-
-      //
-      {
-        id: ncNanoId(),
-        href: "/listing-real-estate",
-        name: "Real Estate Listings",
-        isNew: true,
-        type: "dropdown",
-        children: [
-          {
-            id: ncNanoId(),
-            href: "/listing-real-estate",
-            name: "Real Estate Listings",
-            isNew: true,
-          },
-          {
-            id: ncNanoId(),
-            href: "/listing-real-estate-map",
-            name: "Real Estate Maps",
-            isNew: true,
-          },
-        ],
-      },
-      //
-      {
-        id: ncNanoId(),
-        href: "/listing-flights",
-        name: "Flights listing",
-        isNew: true,
-      },
-    ],
+    protected:true,
   },
   {
     id: ncNanoId(),
-    href: "/author",
+    href: "/schedule",
     name: "Lịch tập luyện",
+    protected: true,
     // type: "dropdown",
     // children: templatesChildrenMenus,
   },
 
   {
     id: ncNanoId(),
-    href: "/blog",
-    name: "Other pages",
+    href: "/body-info",
+    name: "Thông số cơ thể",
+    protected: true,
     // type: "dropdown",
     // children: otherPageChildMenus,
   },
