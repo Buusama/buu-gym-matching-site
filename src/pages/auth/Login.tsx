@@ -5,29 +5,30 @@ import { FC } from "react";
 // import { Helmet } from "react-helmet";
 import { useForm, } from 'react-hook-form';
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import Input from "shared/Input/Input";
 import { useAppDispatch, useAppSelector } from "states";
 import { fetchUser } from "states/slices/auth";
 import { login, selectAuthFormError, selectAuthFormStatus, selectAuthFormValue } from "states/slices/authForm";
-import { Alert } from "shared/Alert/Alert";
+import customToastify from "utils/customToastify";
 export interface PageLoginProps {
   className?: string;
 }
 
 const loginSocials = [
   {
-    name: "Continue with Facebook",
+    name: "Tiếp tục với Facebook",
     href: "#",
     icon: facebookSvg,
   },
   {
-    name: "Continue with Twitter",
+    name: "Tiếp tục với Twitter",
     href: "#",
     icon: twitterSvg,
   },
   {
-    name: "Continue with Google",
+    name: "Tiếp tục với Google",
     href: "#",
     icon: googleSvg,
   },
@@ -43,19 +44,13 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
 
   const submitForm = (data: any) => {
     dispatch(login(data)).then((res: any) => {
-      console.log(res);
       if (res.payload) {
         dispatch(fetchUser());
         navigate('/');
         reset();
-        // Alert 
-        Alert({
-          type: 'success',
-          children: 'Login successfully',
-        });
       }
       else {
-        console.error("Login failed");
+        customToastify({ message: "Đăng nhập thất bại", type: "error" });
       }
     })
   };
