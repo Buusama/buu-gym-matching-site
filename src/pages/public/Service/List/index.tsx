@@ -1,10 +1,11 @@
+import { TaxonomyType } from "assets/data/types";
 import BackgroundSection from "components/BackgroundSection/BackgroundSection";
 import BgGlassmorphism from "components/BgGlassmorphism/BgGlassmorphism";
-import { useEffect } from "react";
-import SectionGridFilterCard from "./SectionGridFilterCard";
-import SectionGridServiceBox from "./SectionGridServiceBox";
 import SectionSliderNewCategories from "components/SectionSliderNewCategories/SectionSliderNewCategories";
-import { TaxonomyType } from "assets/data/types";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "states";
+import { fetchService, selectServiceStatus } from "states/slices/service";
+import SectionGridFilterCard from "./SectionGridFilterCard";
 const DEMO_CATS: TaxonomyType[] = [
   {
     id: "1",
@@ -72,6 +73,13 @@ function PageService() {
       $body.classList.remove("theme-purple-blueGrey");
     };
   }, []);
+
+  const dispatch = useAppDispatch();
+  const serviceStatus = useAppSelector(selectServiceStatus);
+
+  useEffect(() => {
+    if (serviceStatus === "idle") dispatch(fetchService());
+  }, [dispatch, serviceStatus]);
 
   return (
     <div className="nc-PageHome3 relative overflow-hidden">

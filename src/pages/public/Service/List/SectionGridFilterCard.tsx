@@ -1,24 +1,34 @@
-import { DEMO_SERVICES_LISTINGS } from "assets/data/listings";
-import { ServiceDataType, StayDataType } from "assets/data/types";
+import { ServiceDataType } from "api/service";
 import Heading2 from "components/Heading/Heading2";
 import ServiceCard from "components/ServiceCard/ServiceCard";
 import { FC } from "react";
 import Pagination from "shared/Pagination/Pagination";
+import { useAppDispatch, useAppSelector } from "states";
+import { fetchService, selectServiceFilter, selectServicePagination, selectServiceResults, setFilter } from "states/slices/service";
 import TabFilters from "./TabFilters";
+import { PageType } from "contains/type";
 
 export interface SectionGridFilterCardProps {
   className?: string;
   data?: ServiceDataType[];
 }
 
-const DEMO_DATA: ServiceDataType[] = DEMO_SERVICES_LISTINGS.filter(
-  (_, i) => i < 8
-);
 
 const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   className = "",
-  data = DEMO_DATA,
+  data = useAppSelector(selectServiceResults),
 }) => {
+  const pagination = useAppSelector(selectServicePagination);
+  const filter = useAppSelector(selectServiceFilter);
+
+  const dispatch = useAppDispatch();
+
+  const handlePageChange = (value: number) => {
+    console.log(value);
+    const newPage: PageType = { page: value, take: filter?.page?.take, sort: filter?.page?.sort ?? "asc", sort_by: filter?.page?.sort_by ?? "id" };
+    dispatch(setFilter({ ...filter, page: newPage }));
+    dispatch(fetchService());
+  }
   return (
     <div
       className={`nc-SectionGridFilterCard ${className}`}
@@ -43,7 +53,7 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
         ))}
       </div>
       <div className="flex mt-16 justify-center items-center">
-        <Pagination />
+        <Pagination pagination={pagination} filter={filter.page} handlePageChange={handlePageChange} />
       </div>
     </div>
   );
