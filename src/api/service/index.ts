@@ -1,6 +1,6 @@
 import axiosInstance from "api/axios";
 import { endpoint } from "api/endpoint";
-import { PageType, PaginationType } from "contains/type";
+import { PaginationType } from "contains/type";
 import { Filter } from "states/slices/service";
 
 export interface ServiceDataType {
@@ -11,7 +11,7 @@ export interface ServiceDataType {
     is_online: boolean;
     description: string | null;
     price: number;
-    duration: number | null;
+    duration: number;
     available: number[];
     language: string;
     max_capacity: number;
@@ -35,7 +35,8 @@ export const getListServices = async (
     return response.data;
 }
 
-export const getDetailService = async (id: string | number): Promise<ServiceDataType> => {
-    const response = await axiosInstance.get(endpoint.services.getDetail.replace(":id", id.toString()));
+export const getDetailService = async (id: string | number): Promise<{ data: ServiceDataType }> => {
+    const response = await axiosInstance.get(endpoint.services.getDetail(id));
+    console.log(response.data);
     return response.data;
 }

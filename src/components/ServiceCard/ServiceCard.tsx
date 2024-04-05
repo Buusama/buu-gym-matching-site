@@ -4,6 +4,8 @@ import SaleOffBadge from "components/SaleOffBadge/SaleOffBadge";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import Badge from "shared/Badge/Badge";
+import convertMinuteToHour from "utils/converMinuteToHour";
+import convertNumbThousand from "utils/convertNumbThousand";
 
 export interface ServicesCardProps {
   className?: string;
@@ -42,7 +44,7 @@ const ServiceCard: FC<ServicesCardProps> = ({
           href={`/services/${id}`}
         />
         {/* <BtnLikeIcon isLiked={like} className="absolute right-3 top-3" /> */}
-        {saleOff && <SaleOffBadge className="absolute left-3 top-3" />}
+        {saleOff && <SaleOffBadge className="absolute left-3 top-3" desc={`Giảm ${saleOff}%`} />}
       </div>
     );
   };
@@ -55,7 +57,7 @@ const ServiceCard: FC<ServicesCardProps> = ({
             {size === "default" && (
               <svg className="w-6 h-6 text-neutral-300 dark:text-neutral-6000" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.33333 8.16667V3.5M18.6667 8.16667V3.5M8.16667 12.8333H19.8333M5.83333 24.5H22.1667C23.4553 24.5 24.5 23.4553 24.5 22.1667V8.16667C24.5 6.878 23.4553 5.83333 22.1667 5.83333H5.83333C4.54467 5.83333 3.5 6.878 3.5 8.16667V22.1667C3.5 23.4553 4.54467 24.5 5.83333 24.5Z" stroke="#D1D5DB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
             )}
-            <span className="">{duration}</span>
+            <span className="">{convertMinuteToHour(duration)}{""}</span>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -71,7 +73,7 @@ const ServiceCard: FC<ServicesCardProps> = ({
         <div className="border-b border-neutral-100 dark:border-neutral-800"></div>
         <div className="flex justify-between items-center">
           <span className="text-base font-semibold">
-            {price}
+            {convertNumbThousand(price)}{" VND"}
             {` `}
             {size === "default" && (
               <span className="text-sm text-neutral-500 dark:text-neutral-400 font-normal">

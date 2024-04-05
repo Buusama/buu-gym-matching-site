@@ -14,22 +14,32 @@ import ModalSelectDate from "components/ModalSelectDate";
 import moment from "moment";
 import { DateRage } from "components/HeroSearchForm/StaySearchForm";
 import converSelectedDateToString from "utils/converSelectedDateToString";
-import ModalSelectGuests from "components/ModalSelectGuests";
-import { GuestsObject } from "components/HeroSearchForm2Mobile/GuestsInput";
+import { ParticipantsObject } from "components/HeroSearchForm2Mobile/ParticipantsInput";
+import ModalSelectParticipants from "components/ModalSelectParticipants";
 
-export interface CheckOutPageProps {
+export interface PaymentPageProps {
   className?: string;
+  onClose?: () => void;
+  onChangeParticipants: (date: ParticipantsObject) => void;
+  onChangeDate: (date: DateRage) => void;
+  defaultParticipants: ParticipantsObject
+  defaultDate: DateRage;
 }
 
-const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
+const PaymentPage: FC<PaymentPageProps> = ({
+  className = "",
+  onClose,
+  onChangeParticipants,
+  onChangeDate,
+  defaultParticipants,
+  defaultDate,
+}) => {
   const [rangeDates, setRangeDates] = useState<DateRage>({
     startDate: moment().add(1, "day"),
     endDate: moment().add(5, "days"),
   });
-  const [guests, setGuests] = useState<GuestsObject>({
-    guestAdults: 2,
-    guestChildren: 1,
-    guestInfants: 1,
+  const [participants, setParticipants] = useState<ParticipantsObject>({
+    participants: defaultParticipants.participants || 1,
   });
 
   const renderSidebar = () => {
@@ -58,7 +68,7 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
           </div>
         </div>
         <div className="flex flex-col space-y-4">
-          <h3 className="text-2xl font-semibold">Price detail</h3>
+          <h3 className="text-2xl font-semibold">Thông tin giá cả</h3>
           <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
             <span>$19 x 3 day</span>
             <span>$57</span>
@@ -82,23 +92,23 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
     return (
       <div className="w-full flex flex-col sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-8 px-0 sm:p-6 xl:p-8">
         <h2 className="text-3xl lg:text-4xl font-semibold">
-          Confirm and payment
+          Xác nhận thông tin
         </h2>
         <div className="border-b border-neutral-200 dark:border-neutral-700"></div>
         <div>
           <div>
-            <h3 className="text-2xl font-semibold">Your trip</h3>
+            <h3 className="text-2xl font-semibold">Dịch vụ bạn chọn</h3>
             <NcModal
               renderTrigger={(openModal) => (
                 <span
                   onClick={() => openModal()}
                   className="block lg:hidden underline  mt-1 cursor-pointer"
                 >
-                  View booking details
+                  Xem thông tin cụ thể
                 </span>
               )}
               renderContent={renderSidebar}
-              modalTitle="Booking details"
+              modalTitle="Thông tin chi tiết dịch vụ"
             />
           </div>
           <div className="mt-6 border border-neutral-200 dark:border-neutral-700 rounded-3xl flex flex-col sm:flex-row divide-y sm:divide-x sm:divide-y-0 divide-neutral-200 dark:divide-neutral-700">
@@ -112,7 +122,7 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
                   type="button"
                 >
                   <div className="flex flex-col">
-                    <span className="text-sm text-neutral-400">Date</span>
+                    <span className="text-sm text-neutral-400">Ngày</span>
                     <span className="mt-1.5 text-lg font-semibold">
                       {converSelectedDateToString(rangeDates)}
                     </span>
@@ -122,9 +132,9 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
               )}
             />
 
-            <ModalSelectGuests
-              defaultValue={guests}
-              onChangeGuests={setGuests}
+            <ModalSelectParticipants
+              defaultValue={participants}
+              onChangeParticipants={setParticipants}
               renderChildren={({ openModal }) => (
                 <button
                   type="button"
@@ -132,13 +142,10 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
                   className="text-left flex-1 p-5 flex justify-between space-x-5"
                 >
                   <div className="flex flex-col">
-                    <span className="text-sm text-neutral-400">Guests</span>
+                    <span className="text-sm text-neutral-400">Người tham gia</span>
                     <span className="mt-1.5 text-lg font-semibold">
                       <span className="line-clamp-1">
-                        {`${
-                          (guests.guestAdults || 0) +
-                          (guests.guestChildren || 0)
-                        } Guests, ${guests.guestInfants || 0} Infants`}
+                        {`${participants.participants} Người`}
                       </span>
                     </span>
                   </div>
@@ -150,7 +157,7 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
         </div>
 
         <div>
-          <h3 className="text-2xl font-semibold">Pay with</h3>
+          <h3 className="text-2xl font-semibold">Thanh toán bằng</h3>
           <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 my-5"></div>
 
           <div className="mt-6">
@@ -159,11 +166,10 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
                 <Tab as={Fragment}>
                   {({ selected }) => (
                     <button
-                      className={`px-4 py-1.5 sm:px-6 sm:py-2.5 rounded-full focus:outline-none ${
-                        selected
-                          ? "bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900"
-                          : "text-neutral-6000 dark:text-neutral-400"
-                      }`}
+                      className={`px-4 py-1.5 sm:px-6 sm:py-2.5 rounded-full focus:outline-none ${selected
+                        ? "bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900"
+                        : "text-neutral-6000 dark:text-neutral-400"
+                        }`}
                     >
                       Paypal
                     </button>
@@ -172,11 +178,10 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
                 <Tab as={Fragment}>
                   {({ selected }) => (
                     <button
-                      className={`px-4 py-1.5 sm:px-6 sm:py-2.5  rounded-full flex items-center justify-center focus:outline-none  ${
-                        selected
-                          ? "bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900"
-                          : " text-neutral-6000 dark:text-neutral-400"
-                      }`}
+                      className={`px-4 py-1.5 sm:px-6 sm:py-2.5  rounded-full flex items-center justify-center focus:outline-none  ${selected
+                        ? "bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900"
+                        : " text-neutral-6000 dark:text-neutral-400"
+                        }`}
                     >
                       <span className="mr-2.5">Credit card</span>
                       <img className="w-8" src={visaPng} alt="" />
@@ -189,29 +194,22 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
               <Tab.Panels>
                 <Tab.Panel className="space-y-5">
                   <div className="space-y-1">
-                    <Label>Card number </Label>
+                    <Label>Số thẻ </Label>
                     <Input defaultValue="111 112 222 999" />
                   </div>
                   <div className="space-y-1">
-                    <Label>Card holder </Label>
+                    <Label>Tên chủ thẻ </Label>
                     <Input defaultValue="JOHN DOE" />
                   </div>
                   <div className="flex space-x-5  ">
                     <div className="flex-1 space-y-1">
-                      <Label>Expiration date </Label>
+                      <Label>Ngày hết hạn </Label>
                       <Input type="date" defaultValue="MM/YY" />
                     </div>
                     <div className="flex-1 space-y-1">
                       <Label>CVC </Label>
                       <Input />
                     </div>
-                  </div>
-                  <div className="space-y-1">
-                    <Label>Messager for author </Label>
-                    <Textarea placeholder="..." />
-                    <span className="text-sm text-neutral-500 block">
-                      Write a few sentences about yourself.
-                    </span>
                   </div>
                 </Tab.Panel>
                 <Tab.Panel className="space-y-5">
@@ -220,21 +218,14 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
                     <Input type="email" defaultValue="example@gmail.com" />
                   </div>
                   <div className="space-y-1">
-                    <Label>Password </Label>
+                    <Label>Mật khẩu </Label>
                     <Input type="password" defaultValue="***" />
-                  </div>
-                  <div className="space-y-1">
-                    <Label>Messager for author </Label>
-                    <Textarea placeholder="..." />
-                    <span className="text-sm text-neutral-500 block">
-                      Write a few sentences about yourself.
-                    </span>
                   </div>
                 </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>
             <div className="pt-8">
-              <ButtonPrimary href={"/pay-done"}>Confirm and pay</ButtonPrimary>
+              <ButtonPrimary href={"/pay-done"}>Xác nhận và thanh toán</ButtonPrimary>
             </div>
           </div>
         </div>
@@ -252,4 +243,4 @@ const CheckOutPage: FC<CheckOutPageProps> = ({ className = "" }) => {
   );
 };
 
-export default CheckOutPage;
+export default PaymentPage;

@@ -5,6 +5,6 @@ export const endpoint = {
     },
     services: {
         getList: "/services",
-        getDetail: "/services/:id"
+        getDetail: (id: string | number) => `/services/${id}`,
     }
 }

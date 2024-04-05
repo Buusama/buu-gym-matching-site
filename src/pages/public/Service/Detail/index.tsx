@@ -1,16 +1,17 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import CommentListing from "components/CommentListing/CommentListing";
 import FiveStartIconForRate from "components/FiveStartIconForRate/FiveStartIconForRate";
-import GuestsInput from "components/HeroSearchForm/GuestsInput";
+import ParticipantsInput from "components/HeroSearchForm/ParticipantsInput";
 import ServicesDateSingleInput from "components/HeroSearchForm/ServicesDateSingleInput";
 import StartRating from "components/StartRating/StartRating";
 import useWindowSize from "hooks/useWindowResize";
 import moment from "moment";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   DayPickerSingleDateController,
   isInclusivelyAfterDay,
 } from "react-dates";
+import { useParams } from "react-router-dom";
 import Avatar from "shared/Avatar/Avatar";
 import Badge from "shared/Badge/Badge";
 import ButtonCircle from "shared/Button/ButtonCircle";
@@ -18,25 +19,30 @@ import ButtonPrimary from "shared/Button/ButtonPrimary";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import Input from "shared/Input/Input";
 import NcImage from "shared/NcImage/NcImage";
+import { useAppDispatch, useAppSelector } from "states";
+import { fetchServiceById, selectServiceDetail } from "states/slices/service";
+import convertMinuteToHour from "utils/converMinuteToHour";
+import convertNumbThousand from "utils/convertNumbThousand";
 import LikeSaveBtns from "./LikeSaveBtns";
 import MobileFooterSticky from "./MobileFooterSticky";
 import ModalPhotos from "./ModalPhotos";
+import ModalReserveMobile from "./ModalReserveMobile";
 
 export interface ListingServicesDetailPageProps {
   className?: string;
 }
 
-const PHOTOS: string[] = [
-  "https://images.pexels.com/photos/3225531/pexels-photo-3225531.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-  "https://images.pexels.com/photos/1154638/pexels-photo-1154638.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-  "https://images.pexels.com/photos/3851949/pexels-photo-3851949.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-  "https://images.pexels.com/photos/3019019/pexels-photo-3019019.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-  "https://images.pexels.com/photos/6438752/pexels-photo-6438752.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/1320686/pexels-photo-1320686.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/261394/pexels-photo-261394.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/2861361/pexels-photo-2861361.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "https://images.pexels.com/photos/2677398/pexels-photo-2677398.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-];
+// const PHOTOS: string[] = [
+//   "https://images.pexels.com/photos/3225531/pexels-photo-3225531.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+//   "https://images.pexels.com/photos/1154638/pexels-photo-1154638.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+//   "https://images.pexels.com/photos/3851949/pexels-photo-3851949.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+//   "https://images.pexels.com/photos/3019019/pexels-photo-3019019.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+//   "https://images.pexels.com/photos/6438752/pexels-photo-6438752.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+//   "https://images.pexels.com/photos/1320686/pexels-photo-1320686.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+//   "https://images.pexels.com/photos/261394/pexels-photo-261394.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+//   "https://images.pexels.com/photos/2861361/pexels-photo-2861361.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+//   "https://images.pexels.com/photos/2677398/pexels-photo-2677398.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+// ];
 
 const includes_demo = [
   { name: "Huấn luyện viên riêng" },
@@ -57,12 +63,13 @@ const trainer_demo = [
 const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
   className = "",
 }) => {
+  const dispatch = useAppDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [openFocusIndex, setOpenFocusIndex] = useState(0);
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(
     moment().add(2, "days")
   );
-
+  const [participants, setParticipants] = useState(1);
   const windowSize = useWindowSize();
 
   const getDaySize = () => {
@@ -84,19 +91,25 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
   };
 
   const handleCloseModal = () => setIsOpen(false);
+  const { id } = useParams();
 
+  useEffect(() => {
+    dispatch(fetchServiceById(id?.toString() || ""));
+  }, [dispatch, id]);
+
+  const serviceResult = useAppSelector(selectServiceDetail);
   const renderBacsicInfoSerivce = () => {
     return (
       <div className="listingSection__wrap !space-y-6">
         {/* 1 */}
         <div className="flex justify-between items-center">
-          <Badge color="pink" name="Specific Tour" />
+          {serviceResult?.is_online && (<Badge color="pink" name="Lớp Online" />)}
           <LikeSaveBtns />
         </div>
 
         {/* 2 */}
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold">
-          Lớp Yoga
+          {serviceResult?.name}
         </h2>
 
         {/* 3 */}
@@ -128,11 +141,11 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         <div className="flex items-center justify-between xl:justify-start space-x-8 xl:space-x-12 text-sm text-neutral-700 dark:text-neutral-300">
           <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 text-center sm:text-left sm:space-x-3 ">
             <i className="las la-clock text-2xl"></i>
-            <span className="">3.5 giờ</span>
+            <span className="">{convertMinuteToHour(serviceResult?.duration)}</span>
           </div>
           <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 text-center sm:text-left sm:space-x-3 ">
             <i className="las la-user-friends text-2xl"></i>
-            <span className="">Tối đa 10 người /lớp</span>
+            <span className="">{`Tối đa ${serviceResult?.max_capacity} người /lớp`}</span>
           </div>
           <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 text-center sm:text-left sm:space-x-3 ">
             <i className="las la-language text-2xl"></i>
@@ -149,7 +162,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         <h2 className="text-2xl font-semibold">Mô tả dịch vụ</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         <div className="text-neutral-6000 dark:text-neutral-300">
-          <p>
+          {/* <p>
             LỚP YOGA DÀNH CHO NGƯỜI MỚI BẮT ĐẦU
             <br />
             <br />
@@ -164,7 +177,8 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
             <br />
             Trong lớp yoga, học viên thường sẽ trải qua một loạt các động tác và tư thế yoga, được thực hiện một cách kiên nhẫn và chậm rãi, kết hợp với việc tập trung vào hơi thở và tinh thần.
             Mỗi tư thế yoga đều có những lợi ích riêng, từ việc giãn cơ và cải thiện sự linh hoạt, đến giảm căng thẳng và tăng cường tinh thần tỉnh táo.
-          </p>
+          </p> */}
+          {serviceResult?.description}
         </div>
       </div>
     );
@@ -182,12 +196,12 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         {/* 6 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-neutral-700 dark:text-neutral-300 ">
-          {includes_demo
+          {serviceResult?.available
             .filter((_, i) => i < 12)
             .map((item) => (
-              <div key={item.name} className="flex items-center space-x-3">
+              <div key={item} className="flex items-center space-x-3">
                 <i className="las la-check-circle text-2xl"></i>
-                <span>{item.name}</span>
+                <span>{item}</span>
               </div>
             ))}
         </div>
@@ -274,8 +288,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         <h2 className="text-2xl font-semibold">Những điều cần biết</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
 
-        {/* CONTENT */}
-        <div>
+        {/* <div>
           <h4 className="text-lg font-semibold">Chính sách hủy lịch tập</h4>
           <span className="block mt-3 text-neutral-500 dark:text-neutral-400">
             Mọi dịch vụ đều có thể bị hủy và được hoàn tiền đầy đủ trong vòng 24 giờ
@@ -284,7 +297,6 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         </div>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
 
-        {/* CONTENT */}
         <div>
           <h4 className="text-lg font-semibold">Yêu cầu khách hàng</h4>
           <span className="block mt-3 text-neutral-500 dark:text-neutral-400">
@@ -293,7 +305,6 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         </div>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
 
-        {/* CONTENT */}
         <div>
           <h4 className="text-lg font-semibold">Những thứ cần thiết</h4>
           <div className="prose sm:prose">
@@ -306,7 +317,8 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
+        {serviceResult?.bonus_description}
       </div>
     );
   };
@@ -317,7 +329,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         {/* PRICE */}
         <div className="flex justify-between">
           <span className="text-3xl font-semibold">
-            240.000 VND
+            {convertNumbThousand(serviceResult?.price)}{" VND"}
             <span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
               /người
             </span>
@@ -336,14 +348,11 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
             />
           </div>
           <div className="flex-1 listingServicesDetailPage__GuestsInput">
-            <GuestsInput
+            <ParticipantsInput
               fieldClassName="p-4"
-              defaultValue={{
-                guestAdults: 1,
-                guestChildren: 2,
-                guestInfants: 0,
-              }}
+              defaultValue={{ participants }}
               hasButtonSubmit={false}
+              onChange={(data) => setParticipants(data.participants || 1)}
             />
           </div>
         </form>
@@ -351,22 +360,35 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         {/* SUM */}
         <div className="flex flex-col space-y-4">
           <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
-            <span>$19 x 3 adults</span>
-            <span>$57</span>
+            <span>{`${convertNumbThousand(serviceResult?.price ?? 0)} x ${participants}`}</span>
+            <span>{convertNumbThousand((serviceResult?.price ?? 0) * participants)}{" VND"}</span>
           </div>
           <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
-            <span>Service charge</span>
-            <span>$0</span>
+            <span>VAT</span>
+            <span></span>
           </div>
           <div className="border-b border-neutral-200 dark:border-neutral-700"></div>
           <div className="flex justify-between font-semibold">
-            <span>Total</span>
-            <span>$199</span>
+            <span>Tổng cộng</span>
+            <span>{convertNumbThousand((serviceResult?.price ?? 0) * participants)}{" VND"}</span>
           </div>
         </div>
 
         {/* SUBMIT */}
-        <ButtonPrimary href={"/checkout"}>Reserve</ButtonPrimary>
+        <ModalReserveMobile
+          defaultParticipants={{ participants: 1 }}
+          defaultDate={{ startDate: selectedDate, endDate: selectedDate }}
+          onChangeDate={(data) => setSelectedDate(data.startDate)}
+          onChangeParticipants={(data) => setParticipants(data?.participants || 0)}
+          renderChildren={({ openModal }) => (
+            <ButtonPrimary
+              sizeClass="px-5 sm:px-7 py-3 !rounded-2xl"
+              onClick={openModal}
+            >
+              Đặt ngay
+            </ButtonPrimary>
+          )}
+        />
       </div>
     );
   };
@@ -387,11 +409,11 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
               <NcImage
                 containerClassName="absolute inset-0"
                 className="object-cover w-full h-full rounded-md sm:rounded-xl"
-                src={PHOTOS[0]}
+                src={serviceResult?.gallery_images[0]}
               />
               <div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity"></div>
             </div>
-            {PHOTOS.filter((_, i) => i >= 1 && i < 4).map((item, index) => (
+            {serviceResult?.gallery_images?.filter((_, i) => i >= 1 && i < 4).map((item, index) => (
               <div
                 key={index}
                 className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 2 ? "block" : ""
@@ -437,7 +459,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         </header>
         {/* MODAL PHOTOS */}
         <ModalPhotos
-          imgs={PHOTOS}
+          imgs={serviceResult?.gallery_images || []}
           isOpen={isOpen}
           onClose={handleCloseModal}
           initFocus={openFocusIndex}

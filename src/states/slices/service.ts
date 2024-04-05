@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { ServiceDataType, getListServices } from "api/service";
+import { ServiceDataType, getDetailService, getListServices } from "api/service";
 import { PageType, PaginationType } from "contains/type";
 import { RootState } from "states";
 
@@ -15,6 +15,7 @@ interface ServiceState {
     filter: Filter;
     pagination: PaginationType;
     results: ServiceDataType[],
+    service?: ServiceDataType;
 }
 
 const initialState: ServiceState = {
@@ -29,7 +30,7 @@ const initialState: ServiceState = {
         is_online: false,
         page: {
             page: 0,
-            take: 2,
+            take: 8,
             sort: "asc",
             sort_by: "id",
         },
@@ -41,6 +42,7 @@ const initialState: ServiceState = {
         hasNextPage: false,
     },
     results: [],
+    service: undefined,
 }
 export const fetchService = createAsyncThunk("service/fetchService",
     async (
@@ -53,7 +55,7 @@ export const fetchService = createAsyncThunk("service/fetchService",
         const response = await getListServices({ filter });
         return response;
     });
-
+export const fetchServiceById = createAsyncThunk("service/fetchServiceById",getDetailService);
 export const serviceSlice = createSlice({
     name: "service",
     initialState,
@@ -77,6 +79,16 @@ export const serviceSlice = createSlice({
             })
             .addCase(fetchService.rejected, (state) => {
                 state.status = "error";
+            })
+            .addCase(fetchServiceById.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(fetchServiceById.fulfilled, (state, action) => {
+                state.status = "success";
+                state.service = action.payload.data;
+            })
+            .addCase(fetchServiceById.rejected, (state) => {
+                state.status = "error";
             }),
 });
 export const selectService = (state: RootState) => state.service;
@@ -96,6 +108,9 @@ export const selectServiceFilter = createSelector(
     selectService,
     (service) => service.filter,
 );
-
+export const selectServiceDetail = createSelector(
+    selectService,
+    (service) => service.service,
+);
 export default serviceSlice.reducer;
 export const { setFilter, clearFilter } = serviceSlice.actions;

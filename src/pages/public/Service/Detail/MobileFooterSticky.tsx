@@ -1,5 +1,5 @@
 import { DateRage } from "components/HeroSearchForm/StaySearchForm";
-import { GuestsObject } from "components/HeroSearchForm2Mobile/GuestsInput";
+import { ParticipantsObject } from "components/HeroSearchForm2Mobile/ParticipantsInput";
 import ModalSelectDate from "components/ModalSelectDate";
 import moment from "moment";
 import React, { useState } from "react";
@@ -12,10 +12,8 @@ const MobileFooterSticky = () => {
     startDate: moment().add(4, "days"),
     endDate: moment().add(10, "days"),
   });
-  const [guestsState, setGuestsState] = useState<GuestsObject>({
-    guestAdults: 0,
-    guestChildren: 0,
-    guestInfants: 0,
+  const [participantsState, setParticipantsState] = useState<ParticipantsObject>({
+    participants: 1,
   });
 
   return (
@@ -23,9 +21,9 @@ const MobileFooterSticky = () => {
       <div className="container flex items-center justify-between">
         <div className="">
           <span className="block text-xl font-semibold">
-            $311
+            $120
             <span className="ml-1 text-sm font-normal text-neutral-500 dark:text-neutral-400">
-              /night
+              /người
             </span>
           </span>
           <ModalSelectDate
@@ -42,16 +40,16 @@ const MobileFooterSticky = () => {
           />
         </div>
         <ModalReserveMobile
-          defaultGuests={guestsState}
+          defaultParticipants={participantsState}
           defaultDate={selectedDate}
           onChangeDate={setSelectedDate}
-          onChangeGuests={setGuestsState}
+          onChangeParticipants={setParticipantsState}
           renderChildren={({ openModal }) => (
             <ButtonPrimary
               sizeClass="px-5 sm:px-7 py-3 !rounded-2xl"
               onClick={openModal}
             >
-              Reserve
+              Đặt ngay
             </ButtonPrimary>
           )}
         />

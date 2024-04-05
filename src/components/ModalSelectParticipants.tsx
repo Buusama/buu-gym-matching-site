@@ -1,25 +1,21 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { DateRage } from "components/HeroSearchForm/StaySearchForm";
-import { ParticipantsObject } from "components/HeroSearchForm2Mobile/ParticipantsInput";
-import React, { FC, Fragment, useState } from "react";
-import PaymentPage from "./PaymentPage";
 
-interface ModalReserveMobileProps {
+import React, { FC, Fragment, useState } from "react";
+import ButtonPrimary from "shared/Button/ButtonPrimary";
+import ParticipantsInput, { ParticipantsObject } from "./HeroSearchForm2Mobile/ParticipantsInput";
+
+interface ModalSelecParticipantsProps {
   onClose?: () => void;
   onChangeParticipants: (date: ParticipantsObject) => void;
-  onChangeDate: (date: DateRage) => void;
-  defaultParticipants: ParticipantsObject
-  defaultDate: DateRage;
+  defaultValue: ParticipantsObject;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
 }
 
-const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
+const ModalSelectParticipants: FC<ModalSelecParticipantsProps> = ({
+  defaultValue,
   onClose,
   onChangeParticipants,
-  onChangeDate,
-  defaultParticipants,
-  defaultDate,
   renderChildren,
 }) => {
   const [showModal, setShowModal] = useState(false);
@@ -62,7 +58,7 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
                 leaveFrom="opacity-100 translate-y-0"
                 leaveTo="opacity-0 translate-y-52"
               >
-                <Dialog.Panel className="relative h-full flex-1 flex flex-col justify-between overflow-auto">
+                <Dialog.Panel className="relative h-full overflow-hidden flex-1 flex flex-col justify-between ">
                   <>
                     <div className="absolute left-4 top-4">
                       <button
@@ -73,15 +69,40 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
                       </button>
                     </div>
 
-                    <div className="flex-1 pt-12 py-1 flex flex-col ">
-                      <div className="flex-1 bg-white dark:bg-neutral-900">
-                        <PaymentPage
-                          onChangeParticipants={onChangeParticipants}
-                          onChangeDate={onChangeDate}
-                          defaultParticipants={defaultParticipants}
-                          defaultDate={defaultDate}
-                        />
+                    <div className="flex-1 pt-12 p-1 flex flex-col overflow-hidden">
+                      <div className="flex-1 flex flex-col overflow-hidden bg-white dark:bg-neutral-800">
+                        <div className="flex-1 flex flex-col transition-opacity animate-[myblur_0.4s_ease-in-out] overflow-auto">
+                          <div
+                            className={`flex-1 relative flex z-10 overflow-hidden`}
+                          >
+                            <ParticipantsInput
+                              defaultValue={defaultValue}
+                              onChange={onChangeParticipants}
+                            />
+                          </div>
+                        </div>
                       </div>
+                    </div>
+                    <div className="px-4 py-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 flex justify-between">
+                      <button
+                        type="button"
+                        className="underline font-semibold flex-shrink-0"
+                        onClick={() => {
+                          onChangeParticipants({
+                            participants: 0,
+                          });
+                        }}
+                      >
+                        Clear data
+                      </button>
+                      <ButtonPrimary
+                        sizeClass="px-6 py-3 !rounded-xl"
+                        onClick={() => {
+                          closeModal();
+                        }}
+                      >
+                        Save
+                      </ButtonPrimary>
                     </div>
                   </>
                 </Dialog.Panel>
@@ -94,4 +115,4 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
   );
 };
 
-export default ModalReserveMobile;
+export default ModalSelectParticipants;
