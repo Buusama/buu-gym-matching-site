@@ -1,49 +1,42 @@
-import { DateRage } from "components/HeroSearchForm/StaySearchForm";
+import { ServiceDataType } from "api/service";
 import { ParticipantsObject } from "components/HeroSearchForm2Mobile/ParticipantsInput";
-import ModalSelectDate from "components/ModalSelectDate";
 import moment from "moment";
-import React, { useState } from "react";
+import { FC } from "react";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
-import converSelectedDateToString from "utils/converSelectedDateToString";
+import convertNumbThousand from "utils/convertNumbThousand";
 import ModalReserveMobile from "./ModalReserveMobile";
-
-const MobileFooterSticky = () => {
-  const [selectedDate, setSelectedDate] = useState<DateRage>({
-    startDate: moment().add(4, "days"),
-    endDate: moment().add(10, "days"),
-  });
-  const [participantsState, setParticipantsState] = useState<ParticipantsObject>({
-    participants: 1,
-  });
-
+export interface MobileFooterStickyProps {
+  className?: string;
+  selectedDate: moment.Moment | null;
+  onChangeDate: (date: moment.Moment | null) => void;
+  defaultParticipants: ParticipantsObject,
+  onChangeParticipants: (date: ParticipantsObject) => void;
+  defaultService: any;
+}
+const MobileFooterSticky: FC<MobileFooterStickyProps> = ({
+  className = "",
+  selectedDate = moment(),
+  onChangeDate,
+  defaultService,
+  defaultParticipants,
+  onChangeParticipants
+}) => {
   return (
     <div className="block lg:hidden fixed bottom-0 inset-x-0 py-2 sm:py-3 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-6000 z-20">
       <div className="container flex items-center justify-between">
         <div className="">
           <span className="block text-xl font-semibold">
-            $120
+            {convertNumbThousand(defaultService?.price || 0)} VNĐ
             <span className="ml-1 text-sm font-normal text-neutral-500 dark:text-neutral-400">
               /người
             </span>
           </span>
-          <ModalSelectDate
-            defaultValue={selectedDate}
-            onSelectDate={setSelectedDate}
-            renderChildren={({ defaultValue, openModal }) => (
-              <span
-                onClick={openModal}
-                className="block text-sm underline font-medium"
-              >
-                {converSelectedDateToString(selectedDate)}
-              </span>
-            )}
-          />
         </div>
         <ModalReserveMobile
-          defaultParticipants={participantsState}
+          defaultParticipants={defaultParticipants}
           defaultDate={selectedDate}
-          onChangeDate={setSelectedDate}
-          onChangeParticipants={setParticipantsState}
+          onChangeDate={onChangeDate}
+          onChangeParticipants={onChangeParticipants}
           renderChildren={({ openModal }) => (
             <ButtonPrimary
               sizeClass="px-5 sm:px-7 py-3 !rounded-2xl"
@@ -52,7 +45,7 @@ const MobileFooterSticky = () => {
               Đặt ngay
             </ButtonPrimary>
           )}
-        />
+          defaultService={defaultService} />
       </div>
     </div>
   );

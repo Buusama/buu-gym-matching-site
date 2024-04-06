@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { DateRage } from "components/HeroSearchForm/StaySearchForm";
 import moment from "moment";
 import React, { FC, Fragment, useEffect, useState } from "react";
 import {
@@ -12,10 +11,10 @@ import ButtonPrimary from "shared/Button/ButtonPrimary";
 
 interface ModalSelectDateProps {
   onClose?: () => void;
-  onSelectDate: (date: DateRage) => void;
-  defaultValue: DateRage;
+  onSelectDate: (date: moment.Moment | null) => void;
+  defaultValue: moment.Moment | null;
   renderChildren?: (p: {
-    defaultValue: DateRage;
+    defaultValue: moment.Moment | null;
     openModal: () => void;
   }) => React.ReactNode;
 }
@@ -89,18 +88,18 @@ const ModalSelectDate: FC<ModalSelectDateProps> = ({
                         <div className="flex-1 flex flex-col transition-opacity animate-[myblur_0.4s_ease-in-out] overflow-auto">
                           <div className="p-5 ">
                             <span className="block font-semibold text-xl sm:text-2xl">
-                              When's your trip?
+                              Chọn ngày tập luyện
                             </span>
                           </div>
                           <div
                             className={`flex-1 relative flex z-10 overflow-hidden`}
                           >
                             <DayPickerRangeController
-                              startDate={stateDate.startDate}
-                              endDate={stateDate.endDate}
+                              startDate={stateDate}
+                              endDate={stateDate}
                               onDatesChange={(date) => {
-                                setStateDate(date);
-                                onSelectDate && onSelectDate(date);
+                                setStateDate(date.startDate);
+                                onSelectDate && onSelectDate(date.startDate);
                               }}
                               focusedInput={focusedInputSectionCheckDate}
                               onFocusChange={(focusedInput) =>
@@ -125,10 +124,7 @@ const ModalSelectDate: FC<ModalSelectDateProps> = ({
                         type="button"
                         className="underline font-semibold flex-shrink-0"
                         onClick={() => {
-                          setStateDate({
-                            startDate: moment(),
-                            endDate: moment().add(1, "days"),
-                          });
+                          setStateDate(moment());
                         }}
                       >
                         Clear dates

@@ -10,6 +10,7 @@ interface ModalSelecParticipantsProps {
   onChangeParticipants: (date: ParticipantsObject) => void;
   defaultValue: ParticipantsObject;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
+  max?: number;
 }
 
 const ModalSelectParticipants: FC<ModalSelecParticipantsProps> = ({
@@ -17,6 +18,7 @@ const ModalSelectParticipants: FC<ModalSelecParticipantsProps> = ({
   onClose,
   onChangeParticipants,
   renderChildren,
+  max
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -78,6 +80,7 @@ const ModalSelectParticipants: FC<ModalSelecParticipantsProps> = ({
                             <ParticipantsInput
                               defaultValue={defaultValue}
                               onChange={onChangeParticipants}
+                              max={max}
                             />
                           </div>
                         </div>
@@ -93,7 +96,7 @@ const ModalSelectParticipants: FC<ModalSelecParticipantsProps> = ({
                           });
                         }}
                       >
-                        Clear data
+                        Xóa
                       </button>
                       <ButtonPrimary
                         sizeClass="px-6 py-3 !rounded-xl"
@@ -101,7 +104,7 @@ const ModalSelectParticipants: FC<ModalSelecParticipantsProps> = ({
                           closeModal();
                         }}
                       >
-                        Save
+                        Chọn
                       </ButtonPrimary>
                     </div>
                   </>

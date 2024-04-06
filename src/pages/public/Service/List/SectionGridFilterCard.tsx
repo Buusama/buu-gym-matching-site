@@ -24,7 +24,6 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   const dispatch = useAppDispatch();
 
   const handlePageChange = (value: number) => {
-    console.log(value);
     const newPage: PageType = { page: value, take: filter?.page?.take, sort: filter?.page?.sort ?? "asc", sort_by: filter?.page?.sort_by ?? "id" };
     dispatch(setFilter({ ...filter, page: newPage }));
     dispatch(fetchService());

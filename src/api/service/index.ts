@@ -37,6 +37,5 @@ export const getListServices = async (
 
 export const getDetailService = async (id: string | number): Promise<{ data: ServiceDataType }> => {
     const response = await axiosInstance.get(endpoint.services.getDetail(id));
-    console.log(response.data);
     return response.data;
 }

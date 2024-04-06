@@ -31,25 +31,6 @@ import ModalReserveMobile from "./ModalReserveMobile";
 export interface ListingServicesDetailPageProps {
   className?: string;
 }
-
-// const PHOTOS: string[] = [
-//   "https://images.pexels.com/photos/3225531/pexels-photo-3225531.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-//   "https://images.pexels.com/photos/1154638/pexels-photo-1154638.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-//   "https://images.pexels.com/photos/3851949/pexels-photo-3851949.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-//   "https://images.pexels.com/photos/3019019/pexels-photo-3019019.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-//   "https://images.pexels.com/photos/6438752/pexels-photo-6438752.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-//   "https://images.pexels.com/photos/1320686/pexels-photo-1320686.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-//   "https://images.pexels.com/photos/261394/pexels-photo-261394.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-//   "https://images.pexels.com/photos/2861361/pexels-photo-2861361.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-//   "https://images.pexels.com/photos/2677398/pexels-photo-2677398.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-// ];
-
-const includes_demo = [
-  { name: "Huấn luyện viên riêng" },
-  { name: "Học online qua nền tảng hệ thống" },
-  { name: "Trợ lý AI theo dõi cử động" },
-];
-
 const trainer_demo = [
   { name: "Võ Tá Hoan" },
   { name: "Nguyễn Văn A" },
@@ -376,9 +357,9 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
 
         {/* SUBMIT */}
         <ModalReserveMobile
-          defaultParticipants={{ participants: 1 }}
-          defaultDate={{ startDate: selectedDate, endDate: selectedDate }}
-          onChangeDate={(data) => setSelectedDate(data.startDate)}
+          defaultParticipants={{ participants }}
+          defaultDate={selectedDate}
+          onChangeDate={(date) => setSelectedDate(date)}
           onChangeParticipants={(data) => setParticipants(data?.participants || 0)}
           renderChildren={({ openModal }) => (
             <ButtonPrimary
@@ -388,6 +369,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
               Đặt ngay
             </ButtonPrimary>
           )}
+          defaultService={serviceResult}
         />
       </div>
     );
@@ -452,7 +434,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
                 />
               </svg>
               <span className="ml-2 text-neutral-800 text-sm font-medium">
-                Show all photos
+                Xem thêm ảnh
               </span>
             </div>
           </div>
@@ -486,7 +468,13 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
       </main>
 
       {/* STICKY FOOTER MOBILE */}
-      <MobileFooterSticky />
+      <MobileFooterSticky
+        selectedDate={selectedDate}
+        onChangeDate={setSelectedDate}
+        defaultService={serviceResult}
+        defaultParticipants={{ participants }}
+        onChangeParticipants={(data) => setParticipants(data.participants || 1)}
+      />
 
       {/* OTHER SECTION */}
       <div className="container py-24 lg:py-32">

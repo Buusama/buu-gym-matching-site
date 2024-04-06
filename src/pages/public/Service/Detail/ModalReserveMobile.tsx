@@ -1,6 +1,5 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import { DateRage } from "components/HeroSearchForm/StaySearchForm";
 import { ParticipantsObject } from "components/HeroSearchForm2Mobile/ParticipantsInput";
 import React, { FC, Fragment, useState } from "react";
 import PaymentPage from "./PaymentPage";
@@ -8,10 +7,11 @@ import PaymentPage from "./PaymentPage";
 interface ModalReserveMobileProps {
   onClose?: () => void;
   onChangeParticipants: (date: ParticipantsObject) => void;
-  onChangeDate: (date: DateRage) => void;
+  onChangeDate: (date: moment.Moment | null) => void;
   defaultParticipants: ParticipantsObject
-  defaultDate: DateRage;
+  defaultDate: moment.Moment | null;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
+  defaultService: any;
 }
 
 const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
@@ -21,9 +21,9 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
   defaultParticipants,
   defaultDate,
   renderChildren,
+  defaultService,
 }) => {
   const [showModal, setShowModal] = useState(false);
-
   // FOR RESET ALL DATA WHEN CLICK CLEAR BUTTON
   //
   function closeModal() {
@@ -80,6 +80,7 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
                           onChangeDate={onChangeDate}
                           defaultParticipants={defaultParticipants}
                           defaultDate={defaultDate}
+                          defaultService={defaultService}
                         />
                       </div>
                     </div>

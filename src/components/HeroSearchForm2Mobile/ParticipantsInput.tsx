@@ -9,12 +9,14 @@ export interface ParticipantsInputProps {
   defaultValue: ParticipantsObject;
   onChange?: (data: ParticipantsObject) => void;
   className?: string;
+  max?: number;
 }
 
 const ParticipantsInput: FC<ParticipantsInputProps> = ({
   defaultValue,
   onChange,
   className = "",
+  max = 20,
 }) => {
   const [participantsnputValue, setParticipantsInputValue] = useState(
     defaultValue.participants || 0
@@ -47,9 +49,9 @@ const ParticipantsInput: FC<ParticipantsInputProps> = ({
         className="w-full"
         defaultValue={participantsnputValue}
         onChange={(value) => handleChangeData(value, "participants")}
-        max={20}
+        max={max}
         label="Người tham gia"
-        desc="Tối đa 20 người"
+        desc={`Tối đa ${max} người`}
       />
     </div>
   );
