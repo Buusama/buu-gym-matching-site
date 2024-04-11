@@ -44,7 +44,6 @@ const PaymentPage: FC<PaymentPageProps> = ({
   onChangeTime
 }) => {
   const authStatus = useAppSelector(selectAuthStatus);
-  console.log("🚀 ~ file: PaymentPage.tsx line 46 authStatus: ", authStatus);
   const location = useLocation();
   const renderSidebar = () => {
     return (
@@ -270,7 +269,15 @@ const PaymentPage: FC<PaymentPageProps> = ({
                   </Tab.Panels>
                 </Tab.Group>
                 <div className="pt-8">
-                  <ButtonPrimary href={"/pay-done"}>Xác nhận và thanh toán</ButtonPrimary>
+                  {/* <ButtonPrimary href={"/pay-done"}>Xác nhận và thanh toán</ButtonPrimary> */}
+                  <Link to={"/pay-done"} state={{
+                    defaultService,
+                    defaultParticipants,
+                    defaultDate: defaultDate ? defaultDate.format("DD MMM") : null,
+                    defaultTime
+                  }}>
+                    <ButtonPrimary>Xác nhận và thanh toán</ButtonPrimary>
+                  </Link>
                 </div>
               </div>
             </div>

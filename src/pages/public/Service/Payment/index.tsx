@@ -1,19 +1,22 @@
 import { ServiceDataType } from "api/service";
 import StartRating from "components/StartRating/StartRating";
 import React, { FC } from "react";
+import { useLocation } from "react-router-dom";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import NcImage from "shared/NcImage/NcImage";
 import convertMinuteToHour from "utils/converMinuteToHour";
 
 export interface PayPageProps {
   className?: string;
-  data: ServiceDataType;
 }
 
 const PaynmentDonePage: FC<PayPageProps> = ({
   className = "",
-  data,
 }) => {
+  const location = useLocation();
+  const data = location.state;
+  const { defaultService, defaultParticipants, defaultDate, defaultTime } = data;
+  console.log(data);
   const renderContent = () => {
     return (
       <div className="w-full flex flex-col sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-8 px-0 sm:p-6 xl:p-8">
@@ -29,7 +32,7 @@ const PaynmentDonePage: FC<PayPageProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center">
             <div className="flex-shrink-0 w-full sm:w-40">
               <div className=" aspect-w-4 aspect-h-3 sm:aspect-h-4 rounded-2xl overflow-hidden">
-                <NcImage src={data?.gallery_images[0]} />
+                <NcImage src={defaultService?.gallery_images[0]} />
               </div>
             </div>
             <div className="pt-5  sm:pb-5 sm:px-5 space-y-3">
@@ -38,11 +41,11 @@ const PaynmentDonePage: FC<PayPageProps> = ({
 
                 </span>
                 <span className="text-base sm:text-lg font-medium mt-1 block">
-                  {data?.name}
+                  {defaultService?.name}
                 </span>
               </div>
               <span className="block  text-sm text-neutral-500 dark:text-neutral-400">
-                {convertMinuteToHour(data?.duration)}
+                {convertMinuteToHour(defaultService?.duration)}
               </span>
               <div className="w-10 border-b border-neutral-200  dark:border-neutral-700"></div>
               <StartRating />
@@ -66,9 +69,9 @@ const PaynmentDonePage: FC<PayPageProps> = ({
               </svg>
 
               <div className="flex flex-col">
-                <span className="text-sm text-neutral-400">Date</span>
+                <span className="text-sm text-neutral-400">Ngày</span>
                 <span className="mt-1.5 text-lg font-semibold">
-                  Aug 12 - 16, 2021
+                  {defaultDate}
                 </span>
               </div>
             </div>
@@ -89,8 +92,8 @@ const PaynmentDonePage: FC<PayPageProps> = ({
               </svg>
 
               <div className="flex flex-col">
-                <span className="text-sm text-neutral-400">Guests</span>
-                <span className="mt-1.5 text-lg font-semibold">3 Guests</span>
+                <span className="text-sm text-neutral-400">Số người tham gia</span>
+                <span className="mt-1.5 text-lg font-semibold">{defaultParticipants.participants}</span>
               </div>
             </div>
           </div>
@@ -101,21 +104,27 @@ const PaynmentDonePage: FC<PayPageProps> = ({
           <h3 className="text-2xl font-semibold">Booking detail</h3>
           <div className="flex flex-col space-y-4">
             <div className="flex text-neutral-6000 dark:text-neutral-300">
-              <span className="flex-1">Booking code</span>
+              <span className="flex-1">Mã Đặt lịch</span>
               <span className="flex-1 font-medium text-neutral-900 dark:text-neutral-100">
                 #222-333-111
               </span>
             </div>
             <div className="flex text-neutral-6000 dark:text-neutral-300">
-              <span className="flex-1">Date</span>
+              <span className="flex-1">Ngày</span>
               <span className="flex-1 font-medium text-neutral-900 dark:text-neutral-100">
-                12 Aug, 2021
+                {defaultDate}
               </span>
             </div>
             <div className="flex text-neutral-6000 dark:text-neutral-300">
-              <span className="flex-1">Total</span>
+              <span className="flex-1">Giờ</span>
               <span className="flex-1 font-medium text-neutral-900 dark:text-neutral-100">
-                $199
+                {defaultTime}
+              </span>
+            </div>
+            <div className="flex text-neutral-6000 dark:text-neutral-300">
+              <span className="flex-1">Tổng cộng</span>
+              <span className="flex-1 font-medium text-neutral-900 dark:text-neutral-100">
+                {defaultService?.price * defaultParticipants?.participants} VND
               </span>
             </div>
             <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
@@ -127,7 +136,7 @@ const PaynmentDonePage: FC<PayPageProps> = ({
           </div>
         </div>
         <div>
-          <ButtonPrimary href="/">Explore more stays</ButtonPrimary>
+          <ButtonPrimary href="/">Khám phá thêm dịch vụ khác</ButtonPrimary>
         </div>
       </div>
     );

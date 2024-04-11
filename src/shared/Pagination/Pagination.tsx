@@ -17,6 +17,7 @@ const Pagination: FC<PaginationProps> = ({
   filter,
   handlePageChange,
 }) => {
+  const MAX_DISPLAY_PAGES = 4
   const renderItem = (index: number) => {
     if (index === (filter?.page ?? 0) + 1) {
       // RETURN ACTIVE PAGINATION
@@ -41,27 +42,50 @@ const Pagination: FC<PaginationProps> = ({
     );
   };
 
+  const renderEllipsis = () => (
+    <span className="inline-flex w-11 h-11 items-center justify-center">...</span>
+  );
+
+  const renderPaginationItems = () => {
+    const currentPage = filter?.page ?? 0;
+    const lastPage = pagination.pageCount - 1;
+
+    const start = Math.max(0, currentPage - Math.floor(MAX_DISPLAY_PAGES / 2));
+    const end = Math.min(lastPage, start + MAX_DISPLAY_PAGES - 1);
+
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    const paginationItems = pages.map((pageIndex) => renderItem(pageIndex + 1));
+
+    if (start > 0) {
+      paginationItems.unshift(renderEllipsis());
+    }
+
+    if (end < lastPage) {
+      paginationItems.push(renderEllipsis());
+    }
+
+    return paginationItems;
+  };
+
   return (
-    <nav
-      className={`nc-Pagination inline-flex space-x-1 text-base font-medium ${className}`}
-    >
+    <nav className={`nc-Pagination inline-flex space-x-1 text-base font-medium ${className}`}>
       {pagination?.hasPreviousPage ? (
         <Button
-          className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-white hover:bg-neutral-100 border border-neutral-200 text-neutral-6000 dark:text-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700 ${twFocusClass()}`
-          }
+          className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-white hover:bg-neutral-100 border border-neutral-200 text-neutral-6000 dark:text-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700 ${twFocusClass()}`}
           onClick={() => handlePageChange?.((filter?.page ?? 0) - 1)}
         >
           {"<"}
         </Button>
       ) : (
-        <span
-          className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 ${twFocusClass()}`}
-        >
+        <span className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 ${twFocusClass()}`}>
           {"<"}
         </span>
       )}
-      {Array.from({ length: pagination?.pageCount ?? 0 }, (_, index) => renderItem(index + 1))}
-
+      {renderPaginationItems()}
       {pagination?.hasNextPage ? (
         <Button
           className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-white hover:bg-neutral-100 border border-neutral-200 text-neutral-6000 dark:text-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700 ${twFocusClass()}`}
@@ -70,9 +94,7 @@ const Pagination: FC<PaginationProps> = ({
           {">"}
         </Button>
       ) : (
-        <span
-          className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 ${twFocusClass()}`}
-        >
+        <span className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-800 ${twFocusClass()}`}>
           {">"}
         </span>
       )}
