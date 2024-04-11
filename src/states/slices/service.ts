@@ -3,7 +3,7 @@ import { ServiceDataType, getDetailService, getListServices } from "api/service"
 import { PageType, PaginationType } from "contains/type";
 import { RootState } from "states";
 
-export type Filter = Pick<
+export type FilterService = Pick<
     ServiceDataType,
     "id" | "name" | "categories" | "price" | "duration" | "saleOff" | "is_online"
 > & {
@@ -12,7 +12,7 @@ export type Filter = Pick<
 
 interface ServiceState {
     status: "loading" | "success" | "error" | "idle";
-    filter: Filter;
+    filter: FilterService;
     pagination: PaginationType;
     results: ServiceDataType[],
     service?: ServiceDataType;
@@ -60,7 +60,7 @@ export const serviceSlice = createSlice({
     name: "service",
     initialState,
     reducers: {
-        setFilter(state, action: PayloadAction<Filter>) {
+        setFilter(state, action: PayloadAction<FilterService>) {
             state.filter = action.payload;
         },
         clearFilter(state) {

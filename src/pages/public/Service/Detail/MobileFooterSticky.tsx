@@ -12,6 +12,8 @@ export interface MobileFooterStickyProps {
   defaultParticipants: ParticipantsObject,
   onChangeParticipants: (date: ParticipantsObject) => void;
   defaultService: any;
+  defaultTime: string;
+  onChangeTime: (time: string) => void;
 }
 const MobileFooterSticky: FC<MobileFooterStickyProps> = ({
   className = "",
@@ -19,7 +21,9 @@ const MobileFooterSticky: FC<MobileFooterStickyProps> = ({
   onChangeDate,
   defaultService,
   defaultParticipants,
-  onChangeParticipants
+  onChangeParticipants,
+  defaultTime,
+  onChangeTime
 }) => {
   return (
     <div className="block lg:hidden fixed bottom-0 inset-x-0 py-2 sm:py-3 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-6000 z-20">
@@ -45,7 +49,10 @@ const MobileFooterSticky: FC<MobileFooterStickyProps> = ({
               Đặt ngay
             </ButtonPrimary>
           )}
-          defaultService={defaultService} />
+          defaultService={defaultService}
+          defaultTime={defaultTime}
+          onChangeTime={onChangeTime}
+           />
       </div>
     </div>
   );

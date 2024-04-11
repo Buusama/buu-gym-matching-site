@@ -6,7 +6,10 @@ export interface LocationStates {
   "/403"?: {};
   "/services"?: {};
   "/services/:id"?: {};
+  "/pay-done"?: {};
+  
   "/trainers"?: {};
+  "/trainers/:id"?: {};
 
   "/login"?: {};
   "/signup"?: {};

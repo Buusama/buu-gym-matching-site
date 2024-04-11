@@ -6,5 +6,9 @@ export const endpoint = {
     services: {
         getList: "/services",
         getDetail: (id: string | number) => `/services/${id}`,
+    },
+    trainer: {
+        getList: "/trainers",
+        getDetail: (id: string | number) => `/trainers/${id}`,
     }
 }

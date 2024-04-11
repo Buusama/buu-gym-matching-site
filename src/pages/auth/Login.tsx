@@ -4,7 +4,7 @@ import twitterSvg from "images/Twitter.svg";
 import { FC } from "react";
 // import { Helmet } from "react-helmet";
 import { useForm, } from 'react-hook-form';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import Input from "shared/Input/Input";
@@ -41,13 +41,15 @@ const PageLogin: FC<PageLoginProps> = ({ className = "" }) => {
   const formError = useAppSelector(selectAuthFormError);
   const { register, reset, handleSubmit } = useForm()
   const navigate = useNavigate();
+  const locationState = useLocation();
 
   const submitForm = (data: any) => {
     dispatch(login(data)).then((res: any) => {
       if (res.payload) {
         dispatch(fetchUser());
-        navigate('/');
         reset();
+        const { pathname, search } = locationState?.state?.redirectTo
+        navigate(`${pathname}${search}`);
       }
       else {
         customToastify({ message: "Đăng nhập thất bại", type: "error" });

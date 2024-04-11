@@ -30,9 +30,10 @@ const Login = LazyLoad(() => import("pages/auth/Login"));
 const Register = LazyLoad(() => import("pages/auth/Register"));
 const PageService = LazyLoad(() => import("pages/public/Service/List"));
 const PageServiceDetail = LazyLoad(() => import("pages/public/Service/Detail"));
-const PageTrainer = LazyLoad(() => import("pages/public/Trainer"));
+const ServicePaymentDone = LazyLoad(() => import("pages/public/Service/Payment"));
+const PageTrainer = LazyLoad(() => import("pages/public/Trainer/List"));
+const PageTrainerDetail = LazyLoad(() => import("pages/public/Trainer/Detail"));
 const PageBooking = LazyLoad(() => import("pages/private/member/Booking"));
-
 export const authPages: Page[] = [
   { path: "/login", component: Login },
   { path: "/signup", component: Register },
@@ -40,8 +41,10 @@ export const authPages: Page[] = [
 export const publicPages: Page[] = [
   { path: "/services", component: PageService },
   { path: "/services/:id", component: PageServiceDetail },
+  { path: "/pay-done", component: ServicePaymentDone },
   { path: "/", component: PageHome },
   { path: "/trainers", component: PageTrainer },
+  { path: "/trainers/:id", component: PageTrainerDetail },
 ];
 
 export const memberPages: Page[] = [

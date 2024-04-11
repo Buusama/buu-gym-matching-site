@@ -1,7 +1,7 @@
 import axiosInstance from "api/axios";
 import { endpoint } from "api/endpoint";
 import { PaginationType } from "contains/type";
-import { Filter } from "states/slices/service";
+import { FilterService } from "states/slices/service";
 
 export interface ServiceDataType {
     id: string | number;
@@ -21,7 +21,7 @@ export interface ServiceDataType {
 }
 
 export interface GetListServicesRequest {
-    filter: Filter;
+    filter: FilterService;
 }
 export const getListServices = async (
     request: GetListServicesRequest

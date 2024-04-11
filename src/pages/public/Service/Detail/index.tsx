@@ -50,6 +50,8 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(
     moment().add(2, "days")
   );
+  const [selectedTime, setSelectedTime] = useState("10:00");
+
   const [participants, setParticipants] = useState(1);
   const windowSize = useWindowSize();
 
@@ -370,6 +372,8 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
             </ButtonPrimary>
           )}
           defaultService={serviceResult}
+          defaultTime={selectedTime}
+          onChangeTime={(time) => setSelectedTime(time)}
         />
       </div>
     );
@@ -474,6 +478,8 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         defaultService={serviceResult}
         defaultParticipants={{ participants }}
         onChangeParticipants={(data) => setParticipants(data.participants || 1)}
+        defaultTime={selectedTime}
+        onChangeTime={(time) => setSelectedTime(time)}
       />
 
       {/* OTHER SECTION */}

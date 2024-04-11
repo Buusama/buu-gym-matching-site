@@ -12,6 +12,8 @@ interface ModalReserveMobileProps {
   defaultDate: moment.Moment | null;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
   defaultService: any;
+  defaultTime: string;
+  onChangeTime: (time: string) => void;
 }
 
 const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
@@ -22,6 +24,8 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
   defaultDate,
   renderChildren,
   defaultService,
+  defaultTime,
+  onChangeTime
 }) => {
   const [showModal, setShowModal] = useState(false);
   // FOR RESET ALL DATA WHEN CLICK CLEAR BUTTON
@@ -81,6 +85,8 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
                           defaultParticipants={defaultParticipants}
                           defaultDate={defaultDate}
                           defaultService={defaultService}
+                          defaultTime={defaultTime}
+                          onChangeTime={onChangeTime}
                         />
                       </div>
                     </div>
