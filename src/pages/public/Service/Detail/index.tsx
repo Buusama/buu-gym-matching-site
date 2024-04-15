@@ -86,7 +86,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
       <div className="listingSection__wrap !space-y-6">
         {/* 1 */}
         <div className="flex justify-between items-center">
-          {serviceResult?.is_online && (<Badge color="pink" name="Lớp Online" />)}
+          {/* {serviceResult?.is_online && (<Badge color="pink" name="Lớp Online" />)} */}
           <LikeSaveBtns />
         </div>
 
@@ -128,7 +128,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
           </div>
           <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 text-center sm:text-left sm:space-x-3 ">
             <i className="las la-user-friends text-2xl"></i>
-            <span className="">{`Tối đa ${serviceResult?.max_capacity} người /lớp`}</span>
+            <span className="">{`Tối đa ${serviceResult?.maxParticipants} người /lớp`}</span>
           </div>
           <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 text-center sm:text-left sm:space-x-3 ">
             <i className="las la-language text-2xl"></i>
@@ -145,22 +145,6 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         <h2 className="text-2xl font-semibold">Mô tả dịch vụ</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         <div className="text-neutral-6000 dark:text-neutral-300">
-          {/* <p>
-            LỚP YOGA DÀNH CHO NGƯỜI MỚI BẮT ĐẦU
-            <br />
-            <br />
-            30 Phút đầu tiên – Hướng dẫn cách thở đúng, cách tập yoga đúng
-            <br />
-            <br />
-            30 Phút tiếp theo – Hướng dẫn cách tập yoga cơ bản
-            <br />
-            <br />
-            30 Phút cuối – Hướng dẫn cách tập yoga cơ bản
-            <br />
-            <br />
-            Trong lớp yoga, học viên thường sẽ trải qua một loạt các động tác và tư thế yoga, được thực hiện một cách kiên nhẫn và chậm rãi, kết hợp với việc tập trung vào hơi thở và tinh thần.
-            Mỗi tư thế yoga đều có những lợi ích riêng, từ việc giãn cơ và cải thiện sự linh hoạt, đến giảm căng thẳng và tăng cường tinh thần tỉnh táo.
-          </p> */}
           {serviceResult?.description}
         </div>
       </div>
@@ -179,12 +163,12 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         {/* 6 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-neutral-700 dark:text-neutral-300 ">
-          {serviceResult?.available
+          {serviceResult?.workouts
             .filter((_, i) => i < 12)
             .map((item) => (
-              <div key={item} className="flex items-center space-x-3">
+              <div key={item.id} className="flex items-center space-x-3">
                 <i className="las la-check-circle text-2xl"></i>
-                <span>{item}</span>
+                <span>{item.name} - {item.duration} phút </span>
               </div>
             ))}
         </div>
@@ -268,7 +252,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
     return (
       <div className="listingSection__wrap">
         {/* HEADING */}
-        <h2 className="text-2xl font-semibold">Những điều cần biết</h2>
+        <h2 className="text-2xl font-semibold">Mô tả các bài tập</h2>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700" />
 
         {/* <div>
@@ -301,7 +285,17 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
             </ul>
           </div>
         </div> */}
-        {serviceResult?.bonus_description}
+        {serviceResult?.workouts.map((item) => (
+          <div>
+            <div key={item.id} className="flex items-center space-x-3">
+              <i className="las la-check-circle text-2xl"></i>
+              <span>{item.name}</span>
+            </div>
+            <div className="text-neutral-500 dark:text-neutral-400 mt-2.5 ml-9">
+              {item.description}
+            </div>
+          </div>
+        ))}
       </div>
     );
   };
@@ -395,11 +389,11 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
               <NcImage
                 containerClassName="absolute inset-0"
                 className="object-cover w-full h-full rounded-md sm:rounded-xl"
-                src={serviceResult?.gallery_images[0]}
+                src={serviceResult?.serviceGallaryImages[0]}
               />
               <div className="absolute inset-0 bg-neutral-900 bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity"></div>
             </div>
-            {serviceResult?.gallery_images?.filter((_, i) => i >= 1 && i < 4).map((item, index) => (
+            {serviceResult?.serviceGallaryImages?.filter((_, i) => i >= 1 && i < 4).map((item, index) => (
               <div
                 key={index}
                 className={`relative rounded-md sm:rounded-xl overflow-hidden ${index >= 2 ? "block" : ""
@@ -445,7 +439,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         </header>
         {/* MODAL PHOTOS */}
         <ModalPhotos
-          imgs={serviceResult?.gallery_images || []}
+          imgs={serviceResult?.serviceGallaryImages || []}
           isOpen={isOpen}
           onClose={handleCloseModal}
           initFocus={openFocusIndex}

@@ -23,11 +23,9 @@ const ServiceCard: FC<ServicesCardProps> = ({
   ratioClass = "aspect-w-3 aspect-h-3",
 }) => {
   const {
-    gallery_images,
+    serviceGallaryImages,
     duration,
     name,
-    saleOff,
-    is_online,
     price,
     // reviewStart,
     // reviewCount,
@@ -40,11 +38,11 @@ const ServiceCard: FC<ServicesCardProps> = ({
         <GallerySlider
           uniqueID={`ExperiencesCard_${id}`}
           ratioClass={ratioClass}
-          galleryImgs={gallery_images}
+          galleryImgs={serviceGallaryImages}
           href={`/services/${id}`}
         />
         {/* <BtnLikeIcon isLiked={like} className="absolute right-3 top-3" /> */}
-        {saleOff && <SaleOffBadge className="absolute left-3 top-3" desc={`Giảm ${saleOff}%`} />}
+        {/* {saleOff && <SaleOffBadge className="absolute left-3 top-3" desc={`Giảm ${saleOff}%`} />} */}
       </div>
     );
   };
@@ -61,7 +59,7 @@ const ServiceCard: FC<ServicesCardProps> = ({
           </div>
 
           <div className="flex items-center space-x-2">
-            {is_online && <Badge name="ONLINE" color="green" />}
+            {/* {is_online && <Badge name="ONLINE" color="green" />} */}
             <h2
               className={` font-medium capitalize ${size === "default" ? "text-base" : "text-base"
                 }`}

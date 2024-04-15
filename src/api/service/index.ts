@@ -3,21 +3,22 @@ import { endpoint } from "api/endpoint";
 import { PaginationType } from "contains/type";
 import { FilterService } from "states/slices/service";
 
+export interface WorkoutDataType {
+    id: string | number;
+    name: string;
+    duration: number;
+    description: string | null;
+    thumbnail: string | null;
+}
 export interface ServiceDataType {
     id: string | number;
-    categories: string[];
     name: string;
-    saleOff: string | null;
-    is_online: boolean;
-    description: string | null;
     price: number;
     duration: number;
-    available: number[];
-    language: string;
-    max_capacity: number;
-    bonus_description: string | null;
-    featured_image: string;
-    gallery_images: string[];
+    description: string | null;
+    maxParticipants: number;
+    serviceGallaryImages: string[];
+    workouts: WorkoutDataType[];
 }
 
 export interface GetListServicesRequest {
