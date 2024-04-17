@@ -12,8 +12,8 @@ interface ModalReserveMobileProps {
   defaultDate: moment.Moment | null;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
   defaultService: any;
-  defaultTime: string;
-  onChangeTime: (time: string) => void;
+  defaultTime: number;
+  onChangeTime: (time: number) => void;
 }
 
 const ModalReserveMobile: FC<ModalReserveMobileProps> = ({

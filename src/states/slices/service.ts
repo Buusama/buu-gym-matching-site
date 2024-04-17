@@ -1,11 +1,11 @@
 import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { ServiceDataType, getDetailService, getListServices } from "api/service";
+import { ServiceDataType, getDetailService, getListServices, getScheduleService } from "api/service";
 import { PageType, PaginationType } from "contains/type";
 import { RootState } from "states";
 
 export type FilterService = Pick<
     ServiceDataType,
-    "id" | "name" | "categories" | "price" | "duration" | "saleOff" | "is_online"
+    "id" | "name" | "price" | "duration" | "description" | "maxParticipants" | "serviceGallaryImages" | "workouts"
 > & {
     page?: PageType;
 }
@@ -23,11 +23,12 @@ const initialState: ServiceState = {
     filter: {
         id: "",
         name: "",
-        categories: [],
         price: 0,
         duration: 0,
-        saleOff: "",
-        is_online: false,
+        description: "",
+        maxParticipants: 0,
+        serviceGallaryImages: [],
+        workouts: [],
         page: {
             page: 0,
             take: 8,
@@ -55,7 +56,15 @@ export const fetchService = createAsyncThunk("service/fetchService",
         const response = await getListServices({ filter });
         return response;
     });
-export const fetchServiceById = createAsyncThunk("service/fetchServiceById",getDetailService);
+export const fetchServiceById = createAsyncThunk("service/fetchServiceById", getDetailService);
+export const fetchServiceSchedule = createAsyncThunk("service/fetchServiceSchedule",
+    async (payload: { id: string | number; date: string }) => {
+        const { id, date } = payload;
+        const response = await getScheduleService(id, { date });
+        return response;
+    }
+);
+
 export const serviceSlice = createSlice({
     name: "service",
     initialState,

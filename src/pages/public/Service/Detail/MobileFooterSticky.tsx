@@ -12,8 +12,8 @@ export interface MobileFooterStickyProps {
   defaultParticipants: ParticipantsObject,
   onChangeParticipants: (date: ParticipantsObject) => void;
   defaultService: any;
-  defaultTime: string;
-  onChangeTime: (time: string) => void;
+  defaultTime: number;
+  onChangeTime: (time: number) => void;
 }
 const MobileFooterSticky: FC<MobileFooterStickyProps> = ({
   className = "",

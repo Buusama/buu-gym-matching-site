@@ -1,6 +1,7 @@
 import axiosInstance from "api/axios";
 import { endpoint } from "api/endpoint";
 import { PaginationType } from "contains/type";
+import { Moment } from "moment";
 import { FilterService } from "states/slices/service";
 
 export interface WorkoutDataType {
@@ -24,6 +25,18 @@ export interface ServiceDataType {
 export interface GetListServicesRequest {
     filter: FilterService;
 }
+
+export interface ServiceScheduleDataType {
+    id: string | number;
+    date: string;
+    time: Moment | null;
+    service?: ServiceDataType;
+}
+
+export interface GetScheduleServiceRequest {
+    date: string;
+}
+
 export const getListServices = async (
     request: GetListServicesRequest
 ): Promise<{ data: any[]; meta: PaginationType }> => {
@@ -38,5 +51,15 @@ export const getListServices = async (
 
 export const getDetailService = async (id: string | number): Promise<{ data: ServiceDataType }> => {
     const response = await axiosInstance.get(endpoint.services.getDetail(id));
+    return response.data;
+}
+
+export const getScheduleService = async (
+    id: string | number,
+    request: GetScheduleServiceRequest
+): Promise<{ data: ServiceScheduleDataType[] }> => {
+    const response = await axiosInstance.get(endpoint.services.getScheduleService(id), {
+        params: request,
+    });
     return response.data;
 }

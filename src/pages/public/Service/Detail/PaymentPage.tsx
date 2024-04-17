@@ -8,14 +8,16 @@ import ModalSelectParticipants from "components/ModalSelectParticipants";
 import StartRating from "components/StartRating/StartRating";
 import mastercardPng from "images/mastercard.svg";
 import visaPng from "images/vis.png";
-import { FC, Fragment } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import Input from "shared/Input/Input";
 import NcImage from "shared/NcImage/NcImage";
 import NcModal from "shared/NcModal/NcModal";
-import { useAppSelector } from "states";
+import { useAppDispatch, useAppSelector } from "states";
 import { selectAuthStatus } from "states/slices/auth";
+import { selectScheduleResults } from "states/slices/schedule";
+import { fetchServiceSchedule } from "states/slices/service";
 import convertMinuteToHour from "utils/converMinuteToHour";
 import convertNumbThousand from "utils/convertNumbThousand";
 
@@ -27,11 +29,11 @@ export interface PaymentPageProps {
   onChangeDate: (date: moment.Moment | null) => void;
   defaultDate: moment.Moment | null;
   defaultService: ServiceDataType | undefined;
-  defaultTime: string;
-  onChangeTime: (time: string) => void;
+  defaultTime: number;
+  onChangeTime: (time: number) => void;
 }
 
-const timeArray = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"];
+
 const PaymentPage: FC<PaymentPageProps> = ({
   className = "",
   onClose,
@@ -45,6 +47,21 @@ const PaymentPage: FC<PaymentPageProps> = ({
 }) => {
   const authStatus = useAppSelector(selectAuthStatus);
   const location = useLocation();
+
+  const dispatch = useAppDispatch();
+  const timeArray = useAppSelector(selectScheduleResults);
+  useEffect(() => {
+    dispatch(fetchServiceSchedule({ id: defaultService?.id ?? "", date: defaultDate?.format("YYYY-MM-DD") ?? "" }));
+  }, [defaultService, defaultDate]);
+
+  const handelSubmit = () => {
+    console.log("Submit");
+    console.log(defaultService);
+    console.log(timeArray[defaultTime]);
+    
+
+  };
+
   const renderSidebar = () => {
     return (
       <div className="w-full flex flex-col sm:rounded-2xl lg:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-8 px-0 sm:p-6 xl:p-8">
@@ -161,14 +178,14 @@ const PaymentPage: FC<PaymentPageProps> = ({
           <div className="mt-6 grid grid-cols-3 gap-6 md:gap-8 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
             {timeArray.map((time) => (
               <button
-                key={time}
-                onClick={() => onChangeTime(time)}
-                className={`p-4 rounded-lg focus:outline-none text-sm font-semibold ${defaultTime === time
+                key={time.id}
+                onClick={() => onChangeTime(timeArray.indexOf(time))}
+                className={`p-4 rounded-lg focus:outline-none text-sm font-semibold ${time.time === timeArray[defaultTime].time
                   ? "bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900"
                   : "rounded-lg border border-neutral-200 dark:border-neutral-700"
                   }`}
               >
-                {time}
+                {time?.time?.toString()}
               </button>
             ))}
           </div>
@@ -270,14 +287,22 @@ const PaymentPage: FC<PaymentPageProps> = ({
                 </Tab.Group>
                 <div className="pt-8">
                   {/* <ButtonPrimary href={"/pay-done"}>Xác nhận và thanh toán</ButtonPrimary> */}
-                  <Link to={"/pay-done"} state={{
+                  {/* <Link to={"/pay-done"} state={{
                     defaultService,
                     defaultParticipants,
                     defaultDate: defaultDate ? defaultDate.format("DD MMM") : null,
-                    defaultTime
+                    defaultTime: timeArray[defaultTime]?.time || null,
                   }}>
                     <ButtonPrimary>Xác nhận và thanh toán</ButtonPrimary>
-                  </Link>
+                  </Link> */}
+                  {/* <ButtonPrimary onClick={handelSubmit} >Xác nhận và thanh toán</ButtonPrimary> */}
+                  {
+                    defaultParticipants && defaultDate && defaultService && timeArray[defaultTime] && (
+                      <ButtonPrimary onClick={handelSubmit} >Xác nhận và thanh toán</ButtonPrimary>
+                    ) || (
+                      <ButtonPrimary disabled >Xác nhận và thanh toán</ButtonPrimary>
+                    )
+                  }
                 </div>
               </div>
             </div>

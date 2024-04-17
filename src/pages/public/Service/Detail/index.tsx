@@ -50,7 +50,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
   const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(
     moment().add(2, "days")
   );
-  const [selectedTime, setSelectedTime] = useState("10:00");
+  const [selectedTime, setSelectedTime] = useState(0);
 
   const [participants, setParticipants] = useState(1);
   const windowSize = useWindowSize();
@@ -108,7 +108,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-sm text-neutral-700 dark:text-neutral-300 ">
             {trainer_demo
               .filter((_, i) => i < 12)
-              .map((item) => (
+              .map((item, id) => (
                 <div key={item.name} className="flex items-center space-x-3">
                   <Avatar hasChecked sizeClass="h-10 w-10 lg:h-12 lg:w-12" radius="rounded-full" />
                   <span className="px-2.5 lg:mt-2.5 text-neutral-900 dark:text-neutral-200 font-medium">{item.name}</span>
@@ -286,8 +286,8 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
           </div>
         </div> */}
         {serviceResult?.workouts.map((item) => (
-          <div>
-            <div key={item.id} className="flex items-center space-x-3">
+          <div key={item.id}>
+            <div className="flex items-center space-x-3">
               <i className="las la-check-circle text-2xl"></i>
               <span>{item.name}</span>
             </div>
