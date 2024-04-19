@@ -1,6 +1,5 @@
-import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { ServiceDataType, ServiceScheduleDataType, getDetailService, getListServices, getScheduleService } from "api/service";
-import { PageType, PaginationType } from "contains/type";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { ServiceScheduleDataType, getScheduleService } from "api/service";
 import { RootState } from "states";
 
 
@@ -23,7 +22,7 @@ export const fetchServiceSchedule = createAsyncThunk("service/fetchServiceSchedu
 );
 
 export const scheduleSlice = createSlice({
-    name: "service",
+    name: "schedule",
     initialState,
     reducers: {},
     extraReducers: (builder) =>

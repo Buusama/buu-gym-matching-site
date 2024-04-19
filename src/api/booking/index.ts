@@ -1,5 +1,6 @@
-import axiosInstance from "api/axios";
+import { getAxiosInstance } from "api/axios";
 import { endpoint } from "api/endpoint";
+import { ServiceDataType, ServiceScheduleDataType } from "api/service";
 
 export interface PostCreateBookingRequest {
     schedule_id: string | number;
@@ -7,7 +8,16 @@ export interface PostCreateBookingRequest {
     note: string;
 }
 
+export interface BookingDataType {
+    id: string | number;
+    participants: number;
+    note: string;
+    schedule: ServiceScheduleDataType
+    service: ServiceDataType
+}
+
+
 export const postCreateBooking = async (request: PostCreateBookingRequest): Promise<{ data: any }> => {
-    const response = await axiosInstance.post(endpoint.booking.create, request);
+    const response = await getAxiosInstance().post(endpoint.booking.create, request);
     return response.data;
 }

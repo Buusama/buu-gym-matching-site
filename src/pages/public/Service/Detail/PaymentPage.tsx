@@ -8,7 +8,7 @@ import ModalSelectParticipants from "components/ModalSelectParticipants";
 import StartRating from "components/StartRating/StartRating";
 import mastercardPng from "images/mastercard.svg";
 import visaPng from "images/vis.png";
-import { FC, Fragment, useEffect, useState } from "react";
+import { FC, Fragment, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import Input from "shared/Input/Input";
@@ -16,6 +16,7 @@ import NcImage from "shared/NcImage/NcImage";
 import NcModal from "shared/NcModal/NcModal";
 import { useAppDispatch, useAppSelector } from "states";
 import { selectAuthStatus } from "states/slices/auth";
+import { createBooking } from "states/slices/booking";
 import { selectScheduleResults } from "states/slices/schedule";
 import { fetchServiceSchedule } from "states/slices/service";
 import convertMinuteToHour from "utils/converMinuteToHour";
@@ -56,10 +57,11 @@ const PaymentPage: FC<PaymentPageProps> = ({
 
   const handelSubmit = () => {
     console.log("Submit");
-    console.log(defaultService);
-    console.log(timeArray[defaultTime]);
-    
-
+    dispatch(createBooking({
+      schedule_id: timeArray[defaultTime].id,
+      participants: defaultParticipants.participants ?? 1,
+      note: ""
+    }));
   };
 
   const renderSidebar = () => {
