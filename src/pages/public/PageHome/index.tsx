@@ -1,15 +1,18 @@
 import BackgroundSection from "components/BackgroundSection/BackgroundSection";
 import BgGlassmorphism from "components/BgGlassmorphism/BgGlassmorphism";
 import SectionHero3 from "components/SectionHero/SectionHero3";
-import SectionHowItWork from "components/SectionHowItWork/SectionHowItWork";
 import SectionSubscribe2 from "components/SectionSubscribe2/SectionSubscribe2";
 import { useEffect } from "react";
-import SectionGridCategoryBox from "./SectionGridCategoryBox";
-import SectionGridFeaturePlaces from "./SectionGridFeaturePlaces";
 import SectionGridAuthorBox from "./SectionGridAuthorBox";
+import SectionGridCategoryBox from "./SectionGridCategoryBox";
+import { useQuery } from "react-query";
+import { getTopServices } from "api/service";
+import { convertServiceDataTypeToTaxonomyType } from "utils/convertToNewFormat";
 
 
 function PageHome() {
+  const { data: servicesData, isLoading, isError } = useQuery("services", () => getTopServices(8));
+  const top10Services = convertServiceDataTypeToTaxonomyType(servicesData?.data || []);
   // CUSTOM THEME STYLE
   useEffect(() => {
     const $body = document.querySelector("body");
@@ -33,7 +36,13 @@ function PageHome() {
       <div className="container relative space-y-24 mb-24 ">
 
         {/* SECTION */}
-        <SectionGridCategoryBox />
+        {/* <SectionGridCategoryBox /> */}
+        {isLoading ? <div>Loading...</div> : isError ? <div>Error</div> : (
+          <SectionGridCategoryBox
+            categories={top10Services}
+            categoryCardType="card1"
+          />
+        )}
 
         {/* SECTION */}
         <div className="relative py-16">

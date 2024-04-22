@@ -6,64 +6,15 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "states";
 import { fetchService, selectServiceStatus } from "states/slices/service";
 import SectionGridFilterCard from "./SectionGridFilterCard";
-const DEMO_CATS: TaxonomyType[] = [
-  {
-    id: "1",
-    href: "/services/1",
-    name: "Yoga",
-    taxonomy: "category",
-    count: 17288,
-    thumbnail:
-      "https://images.pexels.com/photos/2581922/pexels-photo-2581922.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
-  },
-  {
-    id: "2",
-    href: "/services/2",
-    name: "Gym",
-    taxonomy: "category",
-    count: 2118,
-    thumbnail:
-      "https://images.pexels.com/photos/2351649/pexels-photo-2351649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "3",
-    href: "/services/3",
-    name: "Spa",
-    taxonomy: "category",
-    count: 36612,
-    thumbnail:
-      "https://images.pexels.com/photos/962464/pexels-photo-962464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "4",
-    href: "/services/4",
-    name: "Boxing",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/248837/pexels-photo-248837.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  },
-  {
-    id: "5",
-    href: "/services/5",
-    name: "Dance",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/3613236/pexels-photo-3613236.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-  {
-    id: "6",
-    href: "/services/6",
-    name: "Cycling",
-    taxonomy: "category",
-    count: 188288,
-    thumbnail:
-      "https://images.pexels.com/photos/3613236/pexels-photo-3613236.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  },
-];
+import { useQuery } from 'react-query';
+import { getTopServices } from "api/service";
+import { convertServiceDataTypeToTaxonomyType } from "utils/convertToNewFormat";
 
 function PageService() {
+
+  const { data: servicesData, isLoading, isError } = useQuery("services", () => getTopServices(10));
+  //rename data, isLoading, isError
+  const top10Services = convertServiceDataTypeToTaxonomyType(servicesData?.data || []);
   // CUSTOM THEME STYLE
   useEffect(() => {
     const $body = document.querySelector("body");
@@ -97,15 +48,19 @@ function PageService() {
         {/* SECTION */}
         <div className="relative py-16">
           <BackgroundSection />
-          <SectionSliderNewCategories
-            heading="Top dich vụ nổi bật"
-            subHeading="Dịch vụ được yêu thích nhất trong tháng"
-            categoryCardType="card5"
-            itemPerRow={4}
-            sliderStyle="style1"
-            uniqueClassName="ListingServicePage"
-            categories={DEMO_CATS}
-          />
+          {
+            isLoading ? <div>Loading...</div> : isError ? <div>Error</div> : (
+              <SectionSliderNewCategories
+                heading="Top dich vụ nổi bật"
+                subHeading="Dịch vụ được yêu thích nhất trong tháng"
+                categoryCardType="card5"
+                itemPerRow={4}
+                sliderStyle="style1"
+                uniqueClassName="ListingServicePage"
+                categories={top10Services}
+              />
+            )
+          }
         </div>
 
       </div>

@@ -2,13 +2,13 @@ import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 import { BookingDataType, postCreateBooking } from "api/booking";
 import { RootState } from "states/store";
 
-interface ScheduleState {
+interface BookingState {
     status: "loading" | "success" | "error" | "idle";
     results: BookingDataType[]
     booking?: BookingDataType;
 }
 
-const initialState: ScheduleState = {
+const initialState: BookingState = {
     status: "idle",
     results: [],
     booking: undefined,
@@ -19,7 +19,12 @@ export const createBooking = createAsyncThunk("booking/postCreateBooking", postC
 export const bookingSlice = createSlice({
     name: "booking",
     initialState,
-    reducers: {},
+    reducers: {
+        resetState: (state) => {
+            state.status = "idle";
+            state.booking = undefined;
+        },
+    },
     extraReducers: (builder) =>
         builder
             .addCase(createBooking.pending, (state) => {
@@ -37,5 +42,10 @@ export const selectBooking = (state: RootState) => state.booking;
 export const selectBookingResults = createSelector(
     selectBooking,
     (booking) => booking.results,
+);
+
+export const selectBookingStatus = createSelector(
+    selectBooking,
+    (booking) => booking.status,
 );
 export default bookingSlice.reducer;

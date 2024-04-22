@@ -20,6 +20,8 @@ export interface ServiceDataType {
     maxParticipants: number;
     serviceGallaryImages: string[];
     workouts: WorkoutDataType[];
+    bookingCount?: number;
+    thumbnail?: string | null;
 }
 
 export interface GetListServicesRequest {
@@ -60,6 +62,17 @@ export const getScheduleService = async (
 ): Promise<{ data: ServiceScheduleDataType[] }> => {
     const response = await axiosInstance.get(endpoint.services.getScheduleService(id), {
         params: request,
+    });
+    return response.data;
+}
+
+export const getTopServices = async (
+    limit: number
+): Promise<{ data: ServiceDataType[] }> => {
+    const response = await axiosInstance.get(endpoint.services.getTop, {
+        params: {
+            limit,
+        },
     });
     return response.data;
 }

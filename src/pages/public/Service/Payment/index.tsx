@@ -1,9 +1,11 @@
 import { ServiceDataType } from "api/service";
 import StartRating from "components/StartRating/StartRating";
 import React, { FC } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import NcImage from "shared/NcImage/NcImage";
+import { useAppDispatch } from "states";
+import { bookingSlice } from "states/slices/booking";
 import convertMinuteToHour from "utils/converMinuteToHour";
 
 export interface PayPageProps {
@@ -14,10 +16,11 @@ const PaynmentDonePage: FC<PayPageProps> = ({
   className = "",
 }) => {
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const data = location.state;
-  const { defaultService, defaultParticipants, defaultDate, defaultTime } = data;
-  console.log(data);
   const renderContent = () => {
+    const { defaultService, defaultParticipants, defaultDate, defaultTime } = data;
+    dispatch(bookingSlice.actions.resetState());
     return (
       <div className="w-full flex flex-col sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-8 px-0 sm:p-6 xl:p-8">
         <h2 className="text-3xl lg:text-4xl font-semibold">
@@ -142,33 +145,11 @@ const PaynmentDonePage: FC<PayPageProps> = ({
     );
   };
 
-  const renderPaymentHistory = () => {
-    return (
-      <div className="w-full flex flex-col sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-8 px-0 sm:p-6 xl:p-8">
-        <h2 className="text-3xl lg:text-4xl font-semibold">
-          Danh sách dịch vụ đã đăng ký
-        </h2>
-
-        <div className="border-b border-neutral-200 dark:border-neutral-700"></div>
-
-        {/* ------------------------ */}
-        <div className="space-y-6">
-          <h3 className="text-2xl font-semibold">Danh sách lịch hẹn trước của bạn</h3>
-
-        </div>
-
-        <div>
-          <ButtonPrimary href="/">Xem thêm</ButtonPrimary>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className={`nc-PayPage ${className}`} data-nc-id="PayPage">
       <main className="container mt-11 mb-24 lg:mb-32 ">
         <div className="max-w-4xl mx-auto">{
-          data ? renderContent() : renderPaymentHistory()
+          data ? renderContent() : Navigate({ to: "/" })
         }</div>
       </main>
     </div>

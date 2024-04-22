@@ -41,7 +41,7 @@ export const authPages: Page[] = [
 export const publicPages: Page[] = [
   { path: "/services", component: PageService },
   { path: "/services/:id", component: PageServiceDetail },
-  { path: "/pay-done", component: ServicePaymentDone },
+  { path: "/services/pay-done", component: ServicePaymentDone },
   { path: "/", component: PageHome },
   { path: "/trainers", component: PageTrainer },
   { path: "/trainers/:id", component: PageTrainerDetail },

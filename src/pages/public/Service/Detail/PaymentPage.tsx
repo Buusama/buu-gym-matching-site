@@ -9,14 +9,14 @@ import StartRating from "components/StartRating/StartRating";
 import mastercardPng from "images/mastercard.svg";
 import visaPng from "images/vis.png";
 import { FC, Fragment, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import Input from "shared/Input/Input";
 import NcImage from "shared/NcImage/NcImage";
 import NcModal from "shared/NcModal/NcModal";
 import { useAppDispatch, useAppSelector } from "states";
 import { selectAuthStatus } from "states/slices/auth";
-import { createBooking } from "states/slices/booking";
+import { createBooking, selectBookingStatus } from "states/slices/booking";
 import { selectScheduleResults } from "states/slices/schedule";
 import { fetchServiceSchedule } from "states/slices/service";
 import convertMinuteToHour from "utils/converMinuteToHour";
@@ -51,6 +51,7 @@ const PaymentPage: FC<PaymentPageProps> = ({
 
   const dispatch = useAppDispatch();
   const timeArray = useAppSelector(selectScheduleResults);
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchServiceSchedule({ id: defaultService?.id ?? "", date: defaultDate?.format("YYYY-MM-DD") ?? "" }));
   }, [defaultService, defaultDate]);
@@ -63,6 +64,21 @@ const PaymentPage: FC<PaymentPageProps> = ({
       note: ""
     }));
   };
+
+  const bookingStatus = useAppSelector(selectBookingStatus);
+  useEffect(() => {
+    if (bookingStatus === "success") {
+      navigate("/services/pay-done", {
+        state: {
+          defaultService,
+          defaultParticipants,
+          defaultDate: defaultDate ? defaultDate.format("DD MMM") : null,
+          defaultTime: timeArray[defaultTime]?.time || null,
+        }
+      });
+    }
+  }, [bookingStatus, dispatch]);
+
 
   const renderSidebar = () => {
     return (
@@ -178,45 +194,28 @@ const PaymentPage: FC<PaymentPageProps> = ({
             />
           </div>
           <div className="mt-6 grid grid-cols-3 gap-6 md:gap-8 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
-            {timeArray.map((time) => (
-              <button
-                key={time.id}
-                onClick={() => onChangeTime(timeArray.indexOf(time))}
-                className={`p-4 rounded-lg focus:outline-none text-sm font-semibold ${time.time === timeArray[defaultTime].time
-                  ? "bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900"
-                  : "rounded-lg border border-neutral-200 dark:border-neutral-700"
-                  }`}
-              >
-                {time?.time?.toString()}
-              </button>
-            ))}
+            {
+              timeArray.length === 0 ? (
+                <span className="col-span-3 font-semibold text-neutral-500 dark:text-neutral-400">
+                  Không có lịch trình phù hợp vui lòng chọn ngày khác
+                </span>
+              ) : (
+                timeArray.map((time) => (
+                  <button
+                    key={time.id}
+                    onClick={() => onChangeTime(timeArray.indexOf(time))}
+                    className={`p-4 rounded-lg focus:outline-none text-sm font-semibold ${time.time === timeArray[defaultTime].time
+                      ? "bg-neutral-800 dark:bg-neutral-300 text-white dark:text-neutral-900"
+                      : "rounded-lg border border-neutral-200 dark:border-neutral-700"
+                      }`}
+                  >
+                    {time?.time?.toString()}
+                  </button>
+                ))
+              )
+            }
           </div>
         </div>
-
-        {/* <div>
-          <h3 className="text-2xl font-semibold">Người đặt lịch</h3>
-          <div className="w-14 border-b border-neutral-200 dark:border-neutral-700 my-5"></div>
-
-          <div className="mt-6">
-
-            <div className="space-y-5">
-              <div className="space-y-1">
-                <Label>Tên(Ghi trên CCCD) </Label>
-                <Input defaultValue="VÕ TÁ HOAN" />
-              </div>
-              <div className="space-y-1">
-                <Label>Email </Label>
-                <Input defaultValue="example@gmail.com" />
-              </div>
-              <div className="space-y-1">
-                <Label>Số Điện Thoại </Label>
-                <Input defaultValue="0912330010" />
-              </div>
-
-            </div>
-          </div>
-        </div> */}
-
         {
           authStatus === "success" ? (
             <div>
@@ -289,18 +288,9 @@ const PaymentPage: FC<PaymentPageProps> = ({
                 </Tab.Group>
                 <div className="pt-8">
                   {/* <ButtonPrimary href={"/pay-done"}>Xác nhận và thanh toán</ButtonPrimary> */}
-                  {/* <Link to={"/pay-done"} state={{
-                    defaultService,
-                    defaultParticipants,
-                    defaultDate: defaultDate ? defaultDate.format("DD MMM") : null,
-                    defaultTime: timeArray[defaultTime]?.time || null,
-                  }}>
-                    <ButtonPrimary>Xác nhận và thanh toán</ButtonPrimary>
-                  </Link> */}
-                  {/* <ButtonPrimary onClick={handelSubmit} >Xác nhận và thanh toán</ButtonPrimary> */}
                   {
                     defaultParticipants && defaultDate && defaultService && timeArray[defaultTime] && (
-                      <ButtonPrimary onClick={handelSubmit} >Xác nhận và thanh toán</ButtonPrimary>
+                      <ButtonPrimary onClick={handelSubmit}>Xác nhận và thanh toán</ButtonPrimary>
                     ) || (
                       <ButtonPrimary disabled >Xác nhận và thanh toán</ButtonPrimary>
                     )

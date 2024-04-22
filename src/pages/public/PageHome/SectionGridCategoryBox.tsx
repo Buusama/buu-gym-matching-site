@@ -19,7 +19,7 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 1882,
     thumbnail:
-    "https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2020/05/boxer-training-bag.jpg?quality=86&strip=all"
+      "https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2020/05/boxer-training-bag.jpg?quality=86&strip=all"
   },
   {
     id: "2",
@@ -28,7 +28,7 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 8288,
     thumbnail:
-    "https://youfit.com/wp-content/uploads/2022/09/cardio-workouts-at-the-gym.png"
+      "https://youfit.com/wp-content/uploads/2022/09/cardio-workouts-at-the-gym.png"
   },
   {
     id: "2",
@@ -37,7 +37,7 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 1288,
     thumbnail:
-    "https://www.siroko.com/blog/c/app/uploads/2021/07/fitness_21858fa8-864f-404f-9bf5-c2a7d5f72ed7-1440x900.jpg"
+      "https://www.siroko.com/blog/c/app/uploads/2021/07/fitness_21858fa8-864f-404f-9bf5-c2a7d5f72ed7-1440x900.jpg"
   },
   {
     id: "2",
@@ -46,7 +46,7 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 112,
     thumbnail:
-    "https://shtheme.org/demosd/gymee/wp-content/uploads/2020/06/gallery-12.jpg"
+      "https://shtheme.org/demosd/gymee/wp-content/uploads/2020/06/gallery-12.jpg"
   },
   {
     id: "2",
@@ -55,7 +55,7 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 323,
     thumbnail:
-    "https://img.freepik.com/free-photo/young-fitness-man-studio_7502-5008.jpg"
+      "https://img.freepik.com/free-photo/young-fitness-man-studio_7502-5008.jpg"
   },
   {
     id: "2",
@@ -64,7 +64,7 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 2223,
     thumbnail:
-    "https://shtheme.org/demosd/gymee/wp-content/uploads/2020/06/gallery-13.jpg"
+      "https://shtheme.org/demosd/gymee/wp-content/uploads/2020/06/gallery-13.jpg"
   },
   {
     id: "11",
@@ -73,7 +73,7 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 1775,
     thumbnail:
-    "https://athleticsweekly.com/wp-content/uploads/2020/11/PT-image-via-OriGym.jpg"
+      "https://athleticsweekly.com/wp-content/uploads/2020/11/PT-image-via-OriGym.jpg"
   },
   {
     id: "222",
@@ -82,12 +82,12 @@ const DEMO_CATS: TaxonomyType[] = [
     taxonomy: "category",
     count: 1288,
     thumbnail:
-    "https://static.toiimg.com/photo/102565262.cms"
+      "https://static.toiimg.com/photo/102565262.cms"
   },
 ];
 
 const SectionGridCategoryBox: React.FC<SectionGridCategoryBoxProps> = ({
-  categories = DEMO_CATS,
+  categories,
   categoryCardType = "card1",
   headingCenter = true,
   className = "",
@@ -112,7 +112,7 @@ const SectionGridCategoryBox: React.FC<SectionGridCategoryBoxProps> = ({
         Khám phá dịch vụ
       </Heading>
       <div className={`grid ${gridClassName} gap-5 sm:gap-6 md:gap-8`}>
-        {categories.map((item, i) => (
+        {categories?.map((item, i) => (
           <CardComponentName key={i} taxonomy={item} />
         ))}
       </div>
