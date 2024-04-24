@@ -4,9 +4,11 @@ import ServiceCard from "components/ServiceCard/ServiceCard";
 import { FC } from "react";
 import Pagination from "shared/Pagination/Pagination";
 import { useAppDispatch, useAppSelector } from "states";
-import { fetchService, selectServiceFilter, selectServicePagination, selectServiceResults, setFilter } from "states/slices/service";
+import { fetchService, selectServiceFilter, selectServicePagination, selectServiceResults, selectServiceStatus, setFilter } from "states/slices/service";
 import TabFilters from "./TabFilters";
 import { PageType } from "contains/type";
+import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
+import Label from "components/Label/Label";
 
 export interface SectionGridFilterCardProps {
   className?: string;
@@ -22,6 +24,8 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   const filter = useAppSelector(selectServiceFilter);
 
   const dispatch = useAppDispatch();
+  const isLoading = useAppSelector(selectServiceStatus) === "loading";
+  const isError = useAppSelector(selectServiceStatus) === "error";
   const handlePageChange = (value: number) => {
     const newPage: PageType = { page: value, take: filter?.page?.take, sort: filter?.page?.sort ?? "asc", sort_by: filter?.page?.sort_by ?? "id" };
     dispatch(setFilter({ ...filter, page: newPage }));
@@ -45,14 +49,20 @@ const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
       <div className="mb-8 lg:mb-11">
         <TabFilters />
       </div>
-      <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {data?.map((service) => (
-          <ServiceCard key={service.id} data={service} />
-        ))}
-      </div>
-      <div className="flex mt-16 justify-center items-center">
-        <Pagination pagination={pagination} filter={filter.page} handlePageChange={handlePageChange} />
-      </div>
+
+      {isLoading ? <LoadingIcon size={30} /> : isError ? <Label className="text-red-500">Có lỗi xảy ra vui lòng thử lại sau</Label>
+        : (
+          <div>
+            <div className="grid grid-cols-1 gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+              {data?.map((service) => (
+                <ServiceCard key={service.id} data={service} />
+              ))}
+            </div>
+            <div className="flex mt-16 justify-center items-center">
+              <Pagination pagination={pagination} filter={filter.page} handlePageChange={handlePageChange} />
+            </div>
+          </div>
+        )}
     </div>
   );
 };

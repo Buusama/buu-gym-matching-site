@@ -2,6 +2,7 @@ import CardCategoryBox1 from "components/CardCategoryBox1/CardCategoryBox1";
 import Heading from "components/Heading/Heading";
 import { TaxonomyType } from "assets/data/types";
 import React from "react";
+import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
 
 export interface SectionGridCategoryBoxProps {
   categories?: TaxonomyType[];
@@ -9,6 +10,8 @@ export interface SectionGridCategoryBoxProps {
   categoryCardType?: "card1";
   className?: string;
   gridClassName?: string;
+  isLoading?: boolean;
+  isError?: boolean;
 }
 
 const DEMO_CATS: TaxonomyType[] = [
@@ -92,6 +95,8 @@ const SectionGridCategoryBox: React.FC<SectionGridCategoryBoxProps> = ({
   headingCenter = true,
   className = "",
   gridClassName = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+  isLoading,
+  isError,
 }) => {
   let CardComponentName = CardCategoryBox1;
   switch (categoryCardType) {
@@ -111,11 +116,12 @@ const SectionGridCategoryBox: React.FC<SectionGridCategoryBoxProps> = ({
       >
         Khám phá dịch vụ
       </Heading>
-      <div className={`grid ${gridClassName} gap-5 sm:gap-6 md:gap-8`}>
-        {categories?.map((item, i) => (
-          <CardComponentName key={i} taxonomy={item} />
-        ))}
-      </div>
+      {isLoading ? <LoadingIcon size={30} /> : isError ? <LoadingIcon size={30} /> :
+        (<div className={`grid ${gridClassName} gap-5 sm:gap-6 md:gap-8`}>
+          {categories?.map((item, i) => (
+            <CardComponentName key={i} taxonomy={item} />
+          ))}
+        </div>)}
     </div>
   );
 };

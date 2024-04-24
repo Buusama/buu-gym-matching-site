@@ -8,6 +8,7 @@ import SectionGridCategoryBox from "./SectionGridCategoryBox";
 import { useQuery } from "react-query";
 import { getTopServices } from "api/service";
 import { convertServiceDataTypeToTaxonomyType } from "utils/convertToNewFormat";
+import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
 
 
 function PageHome() {
@@ -37,12 +38,13 @@ function PageHome() {
 
         {/* SECTION */}
         {/* <SectionGridCategoryBox /> */}
-        {isLoading ? <div>Loading...</div> : isError ? <div>Error</div> : (
-          <SectionGridCategoryBox
-            categories={top10Services}
-            categoryCardType="card1"
-          />
-        )}
+
+        <SectionGridCategoryBox
+          categories={top10Services}
+          categoryCardType="card1"
+          isError={isError}
+          isLoading={isLoading}
+        />
 
         {/* SECTION */}
         <div className="relative py-16">

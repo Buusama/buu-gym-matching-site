@@ -7,6 +7,8 @@ import CardCategory4 from "components/CardCategory4/CardCategory4";
 import NextPrev from "shared/NextPrev/NextPrev";
 import CardCategory5 from "components/CardCategory5/CardCategory5";
 import useNcId from "hooks/useNcId";
+import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
+import Label from "components/Label/Label";
 
 export interface SectionSliderNewCategoriesProps {
   className?: string;
@@ -18,6 +20,8 @@ export interface SectionSliderNewCategoriesProps {
   itemPerRow?: 4 | 5;
   sliderStyle?: "style1" | "style2";
   uniqueClassName: string;
+  isLoading?: boolean;
+  isError?: boolean;
 }
 
 const DEMO_CATS: TaxonomyType[] = [
@@ -87,6 +91,8 @@ const SectionSliderNewCategories: FC<SectionSliderNewCategoriesProps> = ({
   categoryCardType = "card3",
   sliderStyle = "style1",
   uniqueClassName,
+  isLoading,
+  isError,
 }) => {
   const UNIQUE_CLASS =
     "SectionSliderNewCategories__" + uniqueClassName + useNcId();
@@ -149,19 +155,26 @@ const SectionSliderNewCategories: FC<SectionSliderNewCategoriesProps> = ({
         >
           {heading}
         </Heading>
-        <div className="glide__track" data-glide-el="track">
-          <ul className="glide__slides">
-            {categories.map((item, index) => (
-              <li key={index} className={`glide__slide ${itemClassName}`}>
-                {renderCard(item, index)}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {
+          isLoading ? <LoadingIcon size={30} /> :
+            isError ? <Label className="z-999 relative">Có lỗi xảy ra vui lòng thử lại sau</Label> :
+              (<div className="glide__track" data-glide-el="track">
+                <ul className="glide__slides">
+                  {categories.map((item, index) => (
+                    <li key={index} className={`glide__slide ${itemClassName}`}>
+                      {renderCard(item, index)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              )}
 
-        {sliderStyle === "style2" && (
+              
+        {sliderStyle === "style2" &&  (
           <NextPrev className="justify-center mt-16" />
         )}
+
+
       </div>
     </div>
   );

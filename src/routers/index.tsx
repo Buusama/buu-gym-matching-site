@@ -9,6 +9,7 @@ import AuthLayout from "./AuthLayout";
 import { Role } from "enums";
 import { ToastContainer } from "react-toastify";
 import { nanoid } from "@reduxjs/toolkit";
+import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
 
 const LazyLoad = (Component: () => Promise<{ default: React.ComponentType<any> }>) => {
   const ComponentLazy = React.lazy(Component)
@@ -65,7 +66,11 @@ const MyRoutes = () => {
     dispatch(fetchUser());
   }, [dispatch]);
 
-  if (authStatus === "loading") return <div>Loading...</div>;
+  if (authStatus === "loading") return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingIcon size={50} />
+      </div>
+  );
 
   return (
     <BrowserRouter>

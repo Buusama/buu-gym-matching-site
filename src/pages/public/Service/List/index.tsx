@@ -9,10 +9,12 @@ import SectionGridFilterCard from "./SectionGridFilterCard";
 import { useQuery } from 'react-query';
 import { getTopServices } from "api/service";
 import { convertServiceDataTypeToTaxonomyType } from "utils/convertToNewFormat";
+import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
 
 function PageService() {
 
   const { data: servicesData, isLoading, isError } = useQuery("services", () => getTopServices(10));
+
   //rename data, isLoading, isError
   const top10Services = convertServiceDataTypeToTaxonomyType(servicesData?.data || []);
   // CUSTOM THEME STYLE
@@ -48,19 +50,17 @@ function PageService() {
         {/* SECTION */}
         <div className="relative py-16">
           <BackgroundSection />
-          {
-            isLoading ? <div>Loading...</div> : isError ? <div>Error</div> : (
-              <SectionSliderNewCategories
-                heading="Top dich vụ nổi bật"
-                subHeading="Dịch vụ được yêu thích nhất trong tháng"
-                categoryCardType="card5"
-                itemPerRow={4}
-                sliderStyle="style1"
-                uniqueClassName="ListingServicePage"
-                categories={top10Services}
-              />
-            )
-          }
+          <SectionSliderNewCategories
+            heading="Top dich vụ nổi bật"
+            subHeading="Dịch vụ được yêu thích nhất trong tháng"
+            categoryCardType="card5"
+            itemPerRow={4}
+            sliderStyle="style1"
+            uniqueClassName="ListingServicePage"
+            categories={top10Services}
+            isLoading={isLoading}
+            isError={isError}
+          />
         </div>
 
       </div>
