@@ -70,7 +70,9 @@ const Pagination: FC<PaginationProps> = ({
 
     return paginationItems;
   };
-
+  if (pagination.itemCount === 0) {
+    return null; // Không có bản ghi nào, không cần hiển thị phân trang
+  }
   return (
     <nav className={`nc-Pagination inline-flex space-x-1 text-base font-medium ${className}`}>
       {pagination?.hasPreviousPage ? (

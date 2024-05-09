@@ -30,24 +30,15 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   {
     id: ncNanoId(),
     href: "/booking",
-    name: "Đặt lịch ngay",
-    protected:true,
+    name: "Lịch sử đặt lịch",
+    protected: true,
   },
   {
     id: ncNanoId(),
-    href: "/schedule",
-    name: "Lịch tập luyện",
+    href: "/practice",
+    name: "Tập luyện",
     protected: true,
     // type: "dropdown",
     // children: templatesChildrenMenus,
-  },
-
-  {
-    id: ncNanoId(),
-    href: "/body-info",
-    name: "Thông số cơ thể",
-    protected: true,
-    // type: "dropdown",
-    // children: otherPageChildMenus,
   },
 ];

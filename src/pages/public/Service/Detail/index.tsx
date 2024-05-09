@@ -23,7 +23,7 @@ import { useAppDispatch, useAppSelector } from "states";
 import { fetchServiceById, selectServiceDetail } from "states/slices/service";
 import convertMinuteToHour from "utils/converMinuteToHour";
 import convertNumbThousand from "utils/convertNumbThousand";
-import LikeSaveBtns from "./LikeSaveBtns";
+import LikeSaveBtns from "shared/Button/LikeSaveBtns";
 import MobileFooterSticky from "./MobileFooterSticky";
 import ModalPhotos from "./ModalPhotos";
 import ModalReserveMobile from "./ModalReserveMobile";
