@@ -3,11 +3,14 @@ import { ServiceDataType, getDetailService, getListServices, getScheduleService 
 import { PageType, PaginationType } from "contains/type";
 import { RootState } from "states";
 
-export type FilterService = Pick<
-    ServiceDataType,
-    "id" | "name" | "price" | "duration" | "description" | "maxParticipants" | "serviceGallaryImages" | "workouts"
-> & {
+export type FilterService = {
     page?: PageType;
+    trainers?: number[];
+    workouts?: number[];
+    categories?: number[];
+    rangePrices?: number[];
+    durationTime?: number;
+    sort: string;
 }
 
 interface ServiceState {
@@ -21,20 +24,14 @@ interface ServiceState {
 const initialState: ServiceState = {
     status: "idle",
     filter: {
-        id: "",
-        name: "",
-        price: 0,
-        duration: 0,
-        description: "",
-        maxParticipants: 0,
-        serviceGallaryImages: [],
-        workouts: [],
         page: {
             page: 0,
             take: 8,
             sort: "asc",
             sort_by: "id",
         },
+        sort: "asc",
+
     },
     pagination: {
         itemCount: 0,
