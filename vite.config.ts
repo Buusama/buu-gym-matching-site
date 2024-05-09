@@ -22,9 +22,10 @@ export default defineConfig({
       { find: "fonts", replacement: path.resolve(__dirname, "src/assets/fonts") },
       { find: "contains", replacement: path.resolve(__dirname, "src/contains") },
       { find: "pages", replacement: path.resolve(__dirname, "src/pages") },
-      { find: "api", replacement: path.resolve(__dirname, "src/api")},
-      { find: "states", replacement: path.resolve(__dirname, "src/states")},
-      { find: "enums", replacement: path.resolve(__dirname, "src/enums")}
+      { find: "api", replacement: path.resolve(__dirname, "src/api") },
+      { find: "states", replacement: path.resolve(__dirname, "src/states") },
+      { find: "enums", replacement: path.resolve(__dirname, "src/enums") },
+      { find: "@", replacement: path.resolve(__dirname, "src") }
     ]
   },
 

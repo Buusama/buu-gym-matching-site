@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "homepage": ".",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -11,9 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.11",
+    "@fullcalendar/interaction": "^6.1.11",
+    "@fullcalendar/timegrid": "^6.1.11",
     "@glidejs/glide": "^3.4.1",
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^2.0.10",
+    "@left4code/tw-starter": "^3.2.9",
     "@reduxjs/toolkit": "^2.2.3",
     "@tailwindcss/aspect-ratio": "^0.4.1",
     "@tailwindcss/forms": "^0.5.2",
@@ -43,7 +46,7 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "react-use": "^17.4.0",
-    "sass": "^1.54.8",
+    "sass": "^1.77.0",
     "typescript": "^4.7.4",
     "web-vitals": "^3.0.1"
   },
@@ -72,6 +75,8 @@
     ]
   },
   "devDependencies": {
+    "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/react": "^6.1.11",
     "@types/glidejs__glide": "^3.4.0",
     "@types/google-map-react": "^2.1.10",
     "@types/react-dates": "^21.8.6",
@@ -81,6 +86,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "postcss": "^8.4.38",
+    "postcss-advanced-variables": "^3.0.1",
     "tailwindcss": "^3.4.3",
     "vite": "^5.2.0"
   }
