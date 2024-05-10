@@ -26,5 +26,6 @@ dist-ssr
 *.sw?
 *.lock
 *-lock.json
+yarn.lock
 
 .env.*
