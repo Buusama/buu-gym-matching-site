@@ -125,8 +125,6 @@
     @apply pt-1;
   }
 
- ươp
-
   .fc-button-primary {
     @apply !font-normal !inline-block !border-slate-200/60 !text-slate-500 !bg-transparent !capitalize !px-[0.65em] !py-[0.4em];
 
@@ -158,7 +156,13 @@
   }
 
   .fc-event-time {
-    @apply px-0.5 !text-[0.75rem];
+    @apply px-0.5 !text-[0.75rem] ;
+  }
+  .fc-event-main-frame {
+    @apply !px-0.5 !py-0.5 flex-row items-center;
+  }
+  .fc-v-event {
+    @apply !text-[0.75rem] bg-primary-400 border-primary-300 !rounded-md !px-0.5
   }
 
   .fc-daygrid-more-link {
@@ -175,7 +179,7 @@
     .fc-list-day-cushion {
       @apply !bg-darkmode-400;
     }
-
+    
     .fc-event:hover td {
       @apply border-darkmode-400 bg-darkmode-400;
     }

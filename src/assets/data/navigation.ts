@@ -35,7 +35,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   },
   {
     id: ncNanoId(),
-    href: "/practice",
+    href: "/schedule",
     name: "Tập luyện",
     protected: true,
     // type: "dropdown",

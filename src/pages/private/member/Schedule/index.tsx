@@ -49,7 +49,7 @@ function PageSchedule() {
                                 }
                             }
                             events={[
-                                { title: 'event 1', date: '2024-05-09' },
+                                { title: 'event 1', date: '2024-05-09T10:30:00' },
                                 { title: 'event 2', date: '2024-05-09' }
                             ]}
                             editable={false}
