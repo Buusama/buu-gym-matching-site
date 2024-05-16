@@ -44,7 +44,7 @@ const AuthorPage: FC<AuthorPageProps> = ({
 
         {/* ---- */}
         <p className="text-neutral-500 dark:text-neutral-400">
-          {data?.specialization}
+          {data?.specialty}
         </p>
 
         {/* ---- */}

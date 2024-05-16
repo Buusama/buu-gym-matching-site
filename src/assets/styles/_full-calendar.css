@@ -74,7 +74,7 @@
   }
   
   .fc-h-event {
-    @apply bg-primary-400 border-primary-300 rounded-md;
+    @apply bg-primary border-primary rounded-md;
   }
 
   .fc-event-title-container {
@@ -86,7 +86,7 @@
   }
 
   .fc-daygrid-event-dot {
-    @apply border-primary-300 mr-2;
+    @apply border-primary mr-2;
   }
 
   .fc-daygrid-dot-event .fc-event-title {
@@ -140,7 +140,7 @@
 
   .fc-button-primary:not(:disabled):active,
   .fc-button-primary:not(:disabled).fc-button-active {
-    @apply !text-white !bg-primary-400 !border-primary-300;
+    @apply !text-white !bg-primary !border-primary;
   }
 
   .fc-list-day-cushion {
@@ -152,7 +152,7 @@
   }
 
   .fc-list-event-dot {
-    @apply !border-primary-300;
+    @apply !border-primary;
   }
 
   .fc-event-time {
@@ -162,7 +162,7 @@
     @apply !px-0.5 !py-0.5 flex-row items-center;
   }
   .fc-v-event {
-    @apply !text-[0.75rem] bg-primary-400 border-primary-300 !rounded-md !px-0.5
+    @apply !text-[0.75rem] bg-primary border-primary !rounded-md !px-0.5
   }
 
   .fc-daygrid-more-link {

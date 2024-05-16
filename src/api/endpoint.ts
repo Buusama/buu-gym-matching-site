@@ -1,4 +1,3 @@
-import { getScheduleService } from "./service";
 
 export const endpoint = {
     auth: {
@@ -17,5 +16,11 @@ export const endpoint = {
     },
     booking: {
         create: "/bookings",
+        getList: "/bookings",
     },
+    schedule: {
+        memberList: "/schedules/member",
+        trainerList: "/schedules/trainer",
+        getDetail: (id: string | number) => `/schedules/${id}`,
+    }
 }

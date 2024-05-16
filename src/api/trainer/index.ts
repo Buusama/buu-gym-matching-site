@@ -12,7 +12,10 @@ export interface TrainerDataType {
     address: string;
     birth_date: string;
     gender: string;
-    specialization: string;
+    specialty: string;
+    experience: string;
+    reviewCount: number;
+    reviewStart: number;
 }
 
 

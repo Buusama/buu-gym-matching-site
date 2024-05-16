@@ -14,8 +14,14 @@ export interface LocationStates {
   "/login"?: {};
   "/signup"?: {};
 
-  "/booking"?: {};
-  "/schedule"?: {};
+  "/member/booking-history"?: {};
+  "/member/schedules"?: {};
+  "/member/schedules/:id"?: {};
+
+  "/trainer/schedules"?: {};
+  "/trainer/booking/:id"?: {};
+  "/trainer/booking-history"?: {};
+
   "/body-info"?: {};
 }
 

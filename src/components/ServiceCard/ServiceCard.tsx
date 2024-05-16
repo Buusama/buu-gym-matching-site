@@ -1,6 +1,7 @@
 import { ServiceDataType } from "api/service";
 import GallerySlider from "components/GallerySlider/GallerySlider";
 import SaleOffBadge from "components/SaleOffBadge/SaleOffBadge";
+import { ServiceTypeLabel, ServiceTypeValue } from "enums";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import Badge from "shared/Badge/Badge";
@@ -27,6 +28,7 @@ const ServiceCard: FC<ServicesCardProps> = ({
     duration,
     name,
     price,
+    serviceType,
     // reviewStart,
     // reviewCount,
     id,
@@ -41,8 +43,13 @@ const ServiceCard: FC<ServicesCardProps> = ({
           galleryImgs={serviceGallaryImages}
           href={`/services/${id}`}
         />
-        {/* <BtnLikeIcon isLiked={like} className="absolute right-3 top-3" /> */}
-        {/* {saleOff && <SaleOffBadge className="absolute left-3 top-3" desc={`Giảm ${saleOff}%`} />} */}
+
+        {
+          serviceType === ServiceTypeValue.GROUP ? <Badge className="mt-2"  name={ServiceTypeLabel.GROUP} color="green" /> :
+            serviceType === ServiceTypeValue.ONLINE ? <Badge className="mt-2" name={ServiceTypeLabel.ONLINE} color="green" /> :
+              serviceType === ServiceTypeValue.PRIVATE ? <Badge className="mt-2" name={ServiceTypeLabel.PRIVATE} color="green" /> :
+                serviceType === ServiceTypeValue.SELF ? <Badge className="mt-2" name={ServiceTypeLabel.SELF} color="green" /> : null
+        }
       </div>
     );
   };

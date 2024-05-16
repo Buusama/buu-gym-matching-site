@@ -72,7 +72,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
 
   const _renderItem = (item: NavItemType, index: number) => {
     return (
-      item.protected && !user ? null :
+      item.role && user?.role !== item.role ? null :
         <Disclosure
           key={item.id}
           as="li"

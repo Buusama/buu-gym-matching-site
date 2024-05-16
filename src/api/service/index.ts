@@ -22,6 +22,7 @@ export interface ServiceDataType {
     workouts: WorkoutDataType[];
     bookingCount?: number;
     thumbnail?: string | null;
+    serviceType?: number;
 }
 
 export interface GetListServicesRequest {

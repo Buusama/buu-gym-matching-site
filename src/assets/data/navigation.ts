@@ -1,3 +1,4 @@
+import { Role } from "enums";
 import { NavItemType } from "shared/Navigation/NavigationItem";
 import ncNanoId from "utils/ncNanoId";
 
@@ -6,39 +7,40 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     id: ncNanoId(),
     href: "/",
     name: "Trang chủ",
-    protected: false,
     // type: "dropdown",
   },
   {
     id: ncNanoId(),
     href: "/services",
     name: "Dịch vụ",
-    // type: "dropdown",
-    // children: demoChildMenus,
-    // isNew: true,
-    protected: false,
-
   },
   {
     id: ncNanoId(),
     href: "/trainers",
     name: "Huấn luyện viên",
-    protected: false,
-    // type: "megaMenu",
-    // megaMenu: megaMenuDemo,
   },
   {
     id: ncNanoId(),
-    href: "/booking",
+    href: "/member/booking-history",
     name: "Lịch sử đặt lịch",
-    protected: true,
+    role: Role.MEMBER,
   },
   {
     id: ncNanoId(),
-    href: "/schedule",
-    name: "Tập luyện",
-    protected: true,
-    // type: "dropdown",
-    // children: templatesChildrenMenus,
+    href: "/member/schedules",
+    name: "Lịch tập",
+    role: Role.MEMBER,
+  },
+  {
+    id: ncNanoId(),
+    href: "/trainer/booking-history",
+    name: "Lịch sử đặt lịch",
+    role: Role.TRAINER,
+  },
+  {
+    id: ncNanoId(),
+    href: "/trainer/schedules",
+    name: "Lịch tập",
+    role: Role.TRAINER,
   },
 ];

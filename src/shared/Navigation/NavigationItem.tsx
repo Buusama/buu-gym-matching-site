@@ -1,5 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { Role } from "enums";
 import React, { FC, Fragment, useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import NcImage from "shared/NcImage/NcImage";
@@ -20,7 +21,7 @@ export interface NavItemType {
   children?: NavItemType[];
   megaMenu?: MegamenuItem[];
   type?: "dropdown" | "megaMenu" | "none";
-  protected?: boolean;
+  role?: Role;
 }
 
 export interface NavigationItemProps {

@@ -5,12 +5,10 @@ import NavigationItem from "./NavigationItem";
 
 function Navigation() {
   const user = useAppSelector(selectAuthUserInfo);
-
   return (
     <ul className="nc-Navigation hidden lg:flex lg:flex-wrap lg:items-center lg:space-x-1 relative">
       {NAVIGATION_DEMO.map((item) => (
-        // if user is not logged in, hide the item.protected= true
-        item.protected && !user ? null :
+        item.role && user?.role !== item.role ? null :
           <NavigationItem key={item.id} menuItem={item} />
       ))}
     </ul>

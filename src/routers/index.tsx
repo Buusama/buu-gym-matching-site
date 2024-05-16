@@ -35,7 +35,9 @@ const ServicePaymentDone = LazyLoad(() => import("pages/public/Service/Payment")
 const PageTrainer = LazyLoad(() => import("pages/public/Trainer/List"));
 const PageTrainerDetail = LazyLoad(() => import("pages/public/Trainer/Detail"));
 const PageBooking = LazyLoad(() => import("pages/private/member/Booking"));
+const PageBookingDetail = LazyLoad(() => import("pages/private/member/Schedule/detail"));
 const PageSchedule = LazyLoad(() => import("pages/private/member/Schedule"));
+
 export const authPages: Page[] = [
   { path: "/login", component: Login },
   { path: "/signup", component: Register },
@@ -50,12 +52,13 @@ export const publicPages: Page[] = [
 ];
 
 export const memberPages: Page[] = [
-  { path: "/booking", component: PageBooking },
-  { path: "/schedule", component: PageSchedule },
+  { path: "/member/booking-history", component: PageBooking },
+  { path: "/member/schedules", component: PageSchedule },
+  { path: "/member/schedules/:id", component: PageBookingDetail },
 ];
 
 export const trainerPages: Page[] = [
-  { path: "/schedule", component: PageTrainer },
+  { path: "/trainer/booking-history", component: PageTrainer },
   { path: "/body-info", component: PageTrainer },
 ];
 
@@ -69,9 +72,9 @@ const MyRoutes = () => {
   }, [dispatch]);
 
   if (authStatus === "loading") return (
-      <div className="flex justify-center items-center h-screen">
-        <LoadingIcon size={50} />
-      </div>
+    <div className="flex justify-center items-center h-screen">
+      <LoadingIcon size={50} />
+    </div>
   );
 
   return (

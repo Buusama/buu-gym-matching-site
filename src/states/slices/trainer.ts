@@ -5,7 +5,7 @@ import { RootState } from "states";
 
 export type FilterTrainer = Pick<
     TrainerDataType,
-    "TrainerId" | "name" | "email" | "phone" | "address" | "birth_date" | "avatar" | "gender" | "specialization"
+    "TrainerId" | "name" | "email" | "phone" | "address" | "birth_date" | "avatar" | "gender" | "specialty"
 > & {
     page?: PageType;
 }
@@ -29,7 +29,7 @@ const initialState: TrainerState = {
         birth_date: "",
         avatar: "",
         gender: "",
-        specialization: "",
+        specialty: "",
         page: {
             page: 0,
             take: 8,

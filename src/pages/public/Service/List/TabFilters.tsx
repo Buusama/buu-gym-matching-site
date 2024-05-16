@@ -8,19 +8,24 @@ import convertNumbThousand from "utils/convertNumbThousand";
 import Slider from "rc-slider";
 import { useAppDispatch, useAppSelector } from "states";
 import { fetchService, selectServiceFilter, setFilter } from "states/slices/service";
+import { ServiceTypeLabel, ServiceTypeValue } from "enums";
 
 const typeOfCategory = [
   {
-    id: 1,
-    name: "Lớp Online"
+    id: ServiceTypeValue.GROUP,
+    name: ServiceTypeLabel.GROUP,
   },
   {
-    id: 2,
-    name: "Tập theo lớp/nhóm offline"
+    id: ServiceTypeValue.ONLINE,
+    name: ServiceTypeLabel.ONLINE,
   },
   {
-    id: 3,
-    name: "Tập theo cá nhân offline"
+    id: ServiceTypeValue.PRIVATE,
+    name: ServiceTypeLabel.PRIVATE,
+  },
+  {
+    id: ServiceTypeValue.SELF,
+    name: ServiceTypeLabel.SELF,
   },
 ];
 
