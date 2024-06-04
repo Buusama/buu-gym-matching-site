@@ -1,4 +1,4 @@
-import { getScheduleDetail } from "api/schedule";
+import { getBookingDetail } from "api/booking";
 import { ServiceTypeLabel, ServiceTypeValue } from "enums";
 import { FC } from "react";
 import { useQuery } from "react-query";
@@ -17,8 +17,7 @@ const ScheduleDetailPage: FC<ScheduleDetailPageProps> = ({
   className = "",
 }) => {
   const { id } = useParams();
-  const { data: scheduleData, isLoading, isError } = useQuery("scheduleDetail", () => getScheduleDetail(Number(id) || 0));
-
+  const { data: scheduleData, isLoading, isError } = useQuery("scheduleDetail", () => getBookingDetail(Number(id) || 0));
 
   const renderContent = () => {
     return (
@@ -31,11 +30,15 @@ const ScheduleDetailPage: FC<ScheduleDetailPageProps> = ({
 
         {/* ------------------------ */}
         <div className="space-y-6">
-          <h3 className="text-2xl font-semibold">Dịch vụ</h3>
+          <h3 className="text-2xl font-semibold">{
+            scheduleData?.data.serviceType === ServiceTypeValue.GROUP ? "Thông tin lớp học" :
+              scheduleData?.data.serviceType === ServiceTypeValue.ONLINE ? "Thông tin lớp online" :
+                scheduleData?.data.bookingTrainerName ? "Thông tin bài tập riêng tư" :
+                  "Thông tin tự tập" }</h3>
           <div className="flex flex-col sm:flex-row sm:items-center">
             <div className="flex-shrink-0 w-full sm:w-40">
               <div className=" aspect-w-4 aspect-h-3 sm:aspect-h-4 rounded-2xl overflow-hidden">
-                <NcImage src={scheduleData?.data.serviceThumbnail} />
+                <NcImage src={scheduleData?.data.serviceThumbnail ?? scheduleData?.data.workoutThumbnail} />
               </div>
             </div>
             <div className="pt-5  sm:pb-5 sm:px-5 space-y-3">
@@ -44,19 +47,19 @@ const ScheduleDetailPage: FC<ScheduleDetailPageProps> = ({
                 {
                   scheduleData?.data.serviceType === ServiceTypeValue.GROUP ? <Badge name={ServiceTypeLabel.GROUP} color="green" /> :
                     scheduleData?.data.serviceType === ServiceTypeValue.ONLINE ? <Badge name={ServiceTypeLabel.ONLINE} color="green" /> :
-                      scheduleData?.data.serviceType === ServiceTypeValue.PRIVATE ? <Badge name={ServiceTypeLabel.PRIVATE} color="green" /> :
-                        scheduleData?.data.serviceType === ServiceTypeValue.SELF ? <Badge name={ServiceTypeLabel.SELF} color="green" /> : null
+                      scheduleData?.data.bookingTrainerName ? <Badge name={ServiceTypeLabel.PRIVATE} color="green" /> :
+                        <Badge name={ServiceTypeLabel.SELF} color="green" />
                 }
                 <span className="text-base sm:text-lg font-medium mt-1 block">
-                  {scheduleData?.data.serviceName}
+                  {scheduleData?.data.serviceName ?? scheduleData?.data.workoutName}
                 </span>
               </div>
               <span className="block  text-sm text-neutral-500 dark:text-neutral-400">
-                Thời gian tập luyện: {convertMinuteToHour(scheduleData?.data.serviceDuration || 0)}
+                Thời gian tập luyện: {convertMinuteToHour(Number(scheduleData?.data.serviceDuration) || Number(scheduleData?.data.workoutDuration))}
               </span>
               <div className="w-10 border-b border-neutral-200  dark:border-neutral-700"></div>
               <span className="text-base sm:text-lg font-medium mt-1 block">
-                Giáo viên : {scheduleData?.data.trainerName}
+                Giáo viên : {scheduleData?.data.trainerName ?? scheduleData?.data.bookingTrainerName}
               </span>
 
             </div>
@@ -77,7 +80,6 @@ const ScheduleDetailPage: FC<ScheduleDetailPageProps> = ({
                   strokeLinejoin="round"
                 />
               </svg>
-
               <div className="flex flex-col">
                 <span className="text-sm text-neutral-400">Ngày</span>
                 <span className="mt-1.5 text-lg font-semibold">

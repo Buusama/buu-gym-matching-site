@@ -9,6 +9,10 @@ import { useQuery } from "react-query";
 import { getTopServices } from "api/service";
 import { convertServiceDataTypeToTaxonomyType } from "utils/convertToNewFormat";
 import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
+import SectionSubcription from "./SectionSubcription";
+import { selectAuthUserInfo } from "states/slices/auth";
+import { useAppSelector } from "states";
+import { Role } from "enums";
 
 
 function PageHome() {
@@ -23,6 +27,8 @@ function PageHome() {
       $body.classList.remove("theme-purple-blueGrey");
     };
   }, []);
+
+  const user = useAppSelector(selectAuthUserInfo);
 
   return (
     <div className="nc-PageHome3 relative overflow-hidden">
@@ -61,8 +67,10 @@ function PageHome() {
           <SectionGridFeaturePlaces />
         </div> */}
 
-        {/* SECTION */}
-        <SectionSubscribe2 />
+        {user?.role !== Role.MEMBER && (
+          <SectionSubcription />
+        )}
+
       </div>
     </div>
   );

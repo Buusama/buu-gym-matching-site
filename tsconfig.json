@@ -24,5 +24,12 @@
     "baseUrl": "./src/",
   },
   "include": ["src"],
+  "ts-node": {
+    "esm": true,
+    "compilerOptions": {
+      "module": "CommonJS",
+      "moduleResolution": "NodeNext",
+    }
+  },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

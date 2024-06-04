@@ -1,24 +1,39 @@
-import { localStore } from "utils";
-import axios from "axios";
+import axios from 'axios';
+import { localStore } from 'utils';
+import { useNavigate } from 'react-router-dom';
 
-const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_REACT_APP_URL
-});
+// Create a function to configure the Axios instance with interceptors
+const configureAxios = () => {
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_BACKEND_REACT_APP_URL,
+  });
 
-export const getAxiosInstance = (useBearer = true) => {
-    const instance = axios.create({
-        baseURL: import.meta.env.VITE_BACKEND_REACT_APP_URL
-    });
-
-    if (useBearer) {
-        const token = localStore.get("token");
-        if (!token) {
-            throw new Error("No token found");
-        }
-        instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  // Add a request interceptor to include the Authorization header
+  instance.interceptors.request.use((config) => {
+    const token = localStore.get('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
+    return config;
+  });
 
-    return instance;
+  // Add a response interceptor to handle 403 errors
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 403) {
+        // Redirect to the 403 error page
+        window.location.href = '/403';
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  return instance;
 };
+
+const axiosInstance = configureAxios();
+
+export const getAxiosInstance = () => axiosInstance;
 
 export default axiosInstance;

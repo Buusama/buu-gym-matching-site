@@ -8,7 +8,7 @@ export const endpoint = {
         getList: "/services",
         getTop: "/services/top",
         getDetail: (id: string | number) => `/services/${id}`,
-        getScheduleService: (id: string | number) => `/services/${id}/schedules`,
+        getScheduleService: (id: string | number) => `/services/${id}/service_classes`,
     },
     trainer: {
         getList: "/trainers",
@@ -17,10 +17,11 @@ export const endpoint = {
     booking: {
         create: "/bookings",
         getList: "/bookings",
+        getDetail: (id: string | number) => `/bookings/${id}`,
     },
-    schedule: {
-        memberList: "/schedules/member",
-        trainerList: "/schedules/trainer",
-        getDetail: (id: string | number) => `/schedules/${id}`,
+    serviceClasses: {
+        memberList: "/service_classes/member",
+        trainerList: "/service_classes/trainer",
+        getDetail: (id: string | number) => `/service_classes/${id}`,
     }
 }

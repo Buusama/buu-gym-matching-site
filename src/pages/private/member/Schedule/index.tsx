@@ -1,16 +1,12 @@
-import BgGlassmorphism from "components/BgGlassmorphism/BgGlassmorphism";
-import { useEffect } from "react";
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import Heading2 from "components/Heading/Heading2";
-import { useQuery } from "react-query";
 import { getListBooking } from "api/booking";
-import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
+import BgGlassmorphism from "components/BgGlassmorphism/BgGlassmorphism";
+import Calendar from "components/FullCalendar/FullCalendar";
+import Heading2 from "components/Heading/Heading2";
 import Label from "components/Label/Label";
+import { useEffect } from "react";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { getListScheduleMember } from "api/schedule";
+import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
 
 function PageSchedule() {
     // CUSTOM THEME STYLE
@@ -24,12 +20,11 @@ function PageSchedule() {
         };
     }, []);
 
-    const { data: bookingData, isLoading, isError } = useQuery("scheduleMemberData", () => getListScheduleMember());
-
+    const { data: bookingData, isLoading, isError } = useQuery("bookingData", () => getListBooking());
     const events = bookingData?.data.map((item) => {
         return {
-            id: item.id.toString(),
-            title: item.serviceName,
+            id: item.bookingId?.toString() ?? '',
+            title: item.serviceName ?? item.workoutName,
             start: item.date + "T" + item.time,
             allDay: false
         }
@@ -57,29 +52,11 @@ function PageSchedule() {
                         isLoading ? <LoadingIcon size={30} /> :
                             isError ? <Label className="z-999 relative">Có lỗi xảy ra vui lòng thử lại sau</Label> :
                                 (
-                                    <div className="full-calendar">
-                                        <FullCalendar
-                                            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin,]}
-                                            initialView="dayGridMonth"
-                                            weekends={false}
-                                            headerToolbar={
-                                                {
-                                                    left: "prev,next today",
-                                                    center: "title",
-                                                    right: "dayGridMonth,timeGridWeek,timeGridDay"
-                                                }
-                                            }
-                                            events={events}
-                                            editable={false}
-                                            selectable={false}
-                                            selectMirror={false}
-                                            dayMaxEvents={true}
-                                            eventClick={function (arg) {
-                                                navigate(`/member/schedules/${arg.event.id}`);
-                                            }}
-
-                                        />
-                                    </div>
+                                    <Calendar
+                                        events={events}
+                                        eventClick={function (arg: any) {
+                                            navigate(`/member/schedules/${arg.event.id}`);
+                                        }} />
                                 )
                     }
                 </div>

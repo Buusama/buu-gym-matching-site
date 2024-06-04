@@ -15,11 +15,11 @@ export interface ScheduleDataType {
 }
 
 export const getListScheduleMember = async (): Promise<{ data: ScheduleDataType[] }> => {
-    const response = await getAxiosInstance().get(endpoint.schedule.memberList);
+    const response = await getAxiosInstance().get(endpoint.serviceClasses.memberList);
     return response.data;
 }
 
 export const getScheduleDetail = async (id: number): Promise<{ data: ScheduleDataType }> => {
-    const response = await getAxiosInstance().get(endpoint.schedule.getDetail(id));
+    const response = await getAxiosInstance().get(endpoint.serviceClasses.getDetail(id));
     return response.data;
 }

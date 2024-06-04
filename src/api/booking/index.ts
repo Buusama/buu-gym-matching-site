@@ -1,6 +1,5 @@
 import { getAxiosInstance } from "api/axios";
 import { endpoint } from "api/endpoint";
-import { ServiceDataType, ServiceScheduleDataType } from "api/service";
 
 export interface PostCreateBookingRequest {
     schedule_id: string | number;
@@ -9,15 +8,23 @@ export interface PostCreateBookingRequest {
 }
 
 export interface BookingDataType {
-    bookingId: string | number;
-    memberId: string | number;
-    serviceName: string;
-    scheduleDate: string;
-    scheduleTime: string;
-    servicePrice: string;
-    participant: string | number;
-    payment_method: string;
-    notes: string;
+    serviceName?: string;
+    servicePrice?: string | number;
+    serviceThumbnail?: string;
+    serviceType?: string | number;
+    serviceDuration?: string | number;
+    trainerName?: string;
+    date?: string;
+    time?: string;
+    bookingId?: string | number;
+    memberId?: string | number;
+    participants?: string | number;
+    payment_method?: string | number;
+    notes?: string;
+    bookingTrainerName?: string;
+    workoutName?: string;
+    workoutDuration?: string | number;
+    workoutThumbnail?: string;
 }
 
 
@@ -28,5 +35,10 @@ export const postCreateBooking = async (request: PostCreateBookingRequest): Prom
 
 export const getListBooking = async (): Promise<{ data: BookingDataType[] }> => {
     const response = await getAxiosInstance().get(endpoint.booking.getList);
+    return response.data;
+}
+
+export const getBookingDetail = async (id: number): Promise<{ data: BookingDataType }> => {
+    const response = await getAxiosInstance().get(endpoint.booking.getDetail(id), { params: { id } });
     return response.data;
 }

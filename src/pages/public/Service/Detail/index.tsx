@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { getScheduleService } from "api/service";
 import CommentListing from "components/CommentListing/CommentListing";
 import FiveStartIconForRate from "components/FiveStartIconForRate/FiveStartIconForRate";
 import ParticipantsInput from "components/HeroSearchForm/ParticipantsInput";
@@ -13,20 +14,20 @@ import {
 } from "react-dates";
 import { useParams } from "react-router-dom";
 import Avatar from "shared/Avatar/Avatar";
-import Badge from "shared/Badge/Badge";
 import ButtonCircle from "shared/Button/ButtonCircle";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
+import LikeSaveBtns from "shared/Button/LikeSaveBtns";
 import Input from "shared/Input/Input";
 import NcImage from "shared/NcImage/NcImage";
 import { useAppDispatch, useAppSelector } from "states";
 import { fetchServiceById, selectServiceDetail } from "states/slices/service";
 import convertMinuteToHour from "utils/converMinuteToHour";
 import convertNumbThousand from "utils/convertNumbThousand";
-import LikeSaveBtns from "shared/Button/LikeSaveBtns";
 import MobileFooterSticky from "./MobileFooterSticky";
 import ModalPhotos from "./ModalPhotos";
 import ModalReserveMobile from "./ModalReserveMobile";
+import { useQuery } from "react-query";
 
 export interface ListingServicesDetailPageProps {
   className?: string;
@@ -81,6 +82,8 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
   }, [dispatch, id]);
 
   const serviceResult = useAppSelector(selectServiceDetail);
+  const { data: serviceClassesData } = useQuery("serviceClasses", () => getScheduleService(id?.toString() || "", { date: selectedDate?.format("YYYY-MM-DD") || "" }));
+  const serviceClasses = serviceClassesData?.data || [];
   const renderBacsicInfoSerivce = () => {
     return (
       <div className="listingSection__wrap !space-y-6">
@@ -199,8 +202,12 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
               initialVisibleMonth={null}
               numberOfMonths={windowSize.width < 1280 ? 1 : 2}
               daySize={getDaySize()}
-              hideKeyboardShortcutsPanel
+              hideKeyboardShortcutsPanel={true}
               isOutsideRange={(day) => !isInclusivelyAfterDay(day, moment())}
+              isDayBlocked={(day) => {
+                const dayStr = day.toDate().toDateString();
+                return !serviceClasses.some((item: any) => item.date === dayStr);
+              }}
             />
           </div>
         </div>

@@ -57,7 +57,6 @@ const PaymentPage: FC<PaymentPageProps> = ({
   }, [defaultService, defaultDate]);
 
   const handelSubmit = () => {
-    console.log("Submit");
     dispatch(createBooking({
       schedule_id: timeArray[defaultTime].id,
       participants: defaultParticipants.participants ?? 1,
