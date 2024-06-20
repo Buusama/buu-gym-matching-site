@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState, useMemo } from 'react';
 import { Input } from 'antd';
 import style from './Join.module.less';
-import UserIcon from '/@/components/UserIcon';
+import { UserIcon } from '@heroicons/react/24/solid';
 
 type JoinProps = {
   stream: MediaStream;

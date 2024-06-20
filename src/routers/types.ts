@@ -23,6 +23,8 @@ export interface LocationStates {
   "/trainer/booking-history"?: {};
 
   "/body-info"?: {};
+
+  "/chatroom/:id"?: {};
 }
 
 export type PathName = keyof LocationStates;

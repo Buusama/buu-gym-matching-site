@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useEffect, useRef, Ref, useImperativeHandle, forwardRef } from "react";
-import UserIcon from "../UserIcon";
-import { ConnectorInfoList, StreamType } from "/@/utils/WebRTC/rtc-client";
-import { audioVisible } from "@/utils/audio/audioVisualizer";
+import { UserIcon } from "@heroicons/react/24/solid";
+import { ConnectorInfoList, StreamType } from "utils/WebRTC/rtc-client";
+import { audioVisible } from "utils/audio/audioVisualizer";
 import style from './MemberList.module.less'
 
 type Props = {

@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from "react";
-import emojis from '@/assets/emojis'
+import emojis from 'assets/data/emojis'
 import style from './Emoji.module.less'
 
 type Props = {
