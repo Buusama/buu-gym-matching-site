@@ -10,6 +10,7 @@
     "noUnusedParameters": false, // Tắt cảnh báo về tham số không sử dụng
     "noImplicitAny": false, // Tắt cảnh báo khi không có kiểu dữ liệu ngầm định
     "isolatedModules": false,
+    "noEmitOnError": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
