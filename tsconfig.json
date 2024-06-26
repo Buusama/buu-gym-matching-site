@@ -6,8 +6,8 @@
     "moduleResolution": "Node",
     "jsx": "react-jsx",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false, // Tắt cảnh báo về biến không sử dụng
+    "noUnusedParameters": false, // Tắt cảnh báo về tham số không sử dụng
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
