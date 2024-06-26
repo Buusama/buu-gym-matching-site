@@ -3,10 +3,9 @@
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "node",         // Đảm bảo moduleResolution là 'node'
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,     // Nếu bạn cần xử lý các tệp JSON
-    "target": "ESNext"             // Hoặc một phiên bản ES khác tùy thuộc vào nhu cầu của bạn
+    "resolveJsonModule": true           // Sử dụng resolveJsonModule nếu cần
   },
   "include": ["vite.config.ts"]
 }
