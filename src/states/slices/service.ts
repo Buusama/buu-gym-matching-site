@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { ServiceDataType, getDetailService, getListServices } from "api/service";
 import { PageType, PaginationType } from "contains/type";
-import { RootState } from "states";
+import { RootState } from "..";
 
 export type FilterService = {
     page?: PageType;

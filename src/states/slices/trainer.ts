@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { TrainerDataType, getDetailTrainer, getListTrainers } from "api/trainer";
 import { PageType, PaginationType } from "contains/type";
-import { RootState } from "states";
+import { RootState } from "..";
 
 export type FilterTrainer = Pick<
     TrainerDataType,
