@@ -37,7 +37,7 @@ const RealEstateSearchForm: FC<RealEstateSearchFormProps> = ({
         <PriceRangeInput />
         {/* BUTTON SUBMIT OF FORM */}
         <div className="px-4 py-4 lg:py-0">
-          <ButtonSubmit href="/listing-real-estate" />
+          <ButtonSubmit href="/" />
         </div>
       </form>
     );

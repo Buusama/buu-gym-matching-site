@@ -9,7 +9,7 @@ interface Props {
 
 const ButtonSubmit: FC<Props> = ({
   className = "",
-  href = "/listing-stay-map",
+  href = "/",
 }) => {
   return (
     <Link

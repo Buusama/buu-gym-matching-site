@@ -21,7 +21,7 @@ const ParticipantsInput: FC<ParticipantsInputProps> = ({
   onChange,
   fieldClassName = "[ nc-hero-field-padding ]",
   className = "[ nc-flex-1 ]",
-  buttonSubmitHref = "/listing-stay-map",
+  buttonSubmitHref = "/",
   hasButtonSubmit = true,
 }) => {
   const [participantsInputValue, setParticipantsInputValue] = useState(

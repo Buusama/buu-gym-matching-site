@@ -83,7 +83,7 @@ const PriceRangeInput: FC<PriceRangeInputProps> = ({
 
             {/* BUTTON SUBMIT OF FORM */}
             <div className="pr-2 xl:pr-4">
-              <ButtonSubmit href="/listing-real-estate" />
+              <ButtonSubmit href="/403" />
             </div>
           </div>
 

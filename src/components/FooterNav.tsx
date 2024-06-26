@@ -16,21 +16,20 @@ interface NavItem {
   link?: PathName;
   icon: any;
 }
-
 const NAV: NavItem[] = [
   {
-    name: "Explore",
+    name: "Trang chủ",
     link: "/",
     icon: MagnifyingGlassIcon,
   },
   {
-    name: "Wishlists",
-    link: "/account-savelists",
+    name: "Dịch vụ",
+    link: "/services",
     icon: HeartIcon,
   },
   {
-    name: "Log in",
-    link: "/account",
+    name: "Lịch tập",
+    link: "/member/schedules",
     icon: UserCircleIcon,
   },
   {

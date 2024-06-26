@@ -42,7 +42,7 @@ const RentalCarDatesRangeInput: FC<RentalCarDatesRangeInputProps> = ({
   wrapFieldClassName = "flex relative",
   numberOfMonths,
   anchorDirection,
-  buttonSubmitHref = "/listing-car",
+  buttonSubmitHref = "/",
   hasButtonSubmit = true,
 }) => {
   const [focusedInput, setFocusedInput] = useState(defaultFocus);
