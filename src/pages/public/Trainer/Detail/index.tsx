@@ -1,17 +1,16 @@
+import { getDetailTrainer } from "api/trainer";
 import {
   DEMO_STAY_LISTINGS
 } from "assets/data/listings";
 import CommentListing from "components/CommentListing/CommentListing";
 import StartRating from "components/StartRating/StartRating";
 import StayCard from "components/StayCard/StayCard";
-import { FC, useEffect } from "react";
+import { FC } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import Avatar from "shared/Avatar/Avatar";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
 import SocialsList from "shared/SocialsList/SocialsList";
-import { useAppDispatch, useAppSelector } from "states";
-import { fetchTrainerById, selectTrainerDetail } from "states/slices/trainer";
-
 export interface AuthorPageProps {
   className?: string;
 }
@@ -19,13 +18,10 @@ export interface AuthorPageProps {
 const AuthorPage: FC<AuthorPageProps> = ({
   className = "",
 }) => {
-  const dispatch = useAppDispatch();
   const { id } = useParams();
-  const data = useAppSelector(selectTrainerDetail);
-  useEffect(() => {
-    dispatch(fetchTrainerById(id?.toString() || ""));
-  }, [id, dispatch]);
-
+  const { data, isLoading, isError } = useQuery("trainerDetail", () => getDetailTrainer(Number(id) || 0));
+  const trainerDetail = data?.data;
+  console.log(trainerDetail);
   const renderSidebar = () => {
     return (
       <div className=" w-full flex flex-col items-center text-center sm:rounded-2xl sm:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-7 px-0 sm:p-6 xl:p-8">
@@ -33,18 +29,18 @@ const AuthorPage: FC<AuthorPageProps> = ({
           hasChecked
           hasCheckedClass="w-6 h-6 -top-0.5 right-2"
           sizeClass="w-28 h-28"
-          imgUrl={data?.avatar}
+          imgUrl={trainerDetail?.staff?.user?.avatar}
         />
 
         {/* ---- */}
         <div className="space-y-3 text-center flex flex-col items-center">
-          <h2 className="text-3xl font-semibold">{data?.name}</h2>
+          <h2 className="text-3xl font-semibold">{trainerDetail?.staff?.user?.name}</h2>
           <StartRating className="!text-base" />
         </div>
 
         {/* ---- */}
         <p className="text-neutral-500 dark:text-neutral-400">
-          {data?.specialty}
+          {trainerDetail?.staff?.user?.specialty}
         </p>
 
         {/* ---- */}
@@ -74,7 +70,7 @@ const AuthorPage: FC<AuthorPageProps> = ({
               />
             </svg>
             <span className="text-neutral-6000 dark:text-neutral-300">
-              {data?.address}
+              {trainerDetail?.staff?.user?.address}
             </span>
           </div>
           <div className="flex items-center space-x-4">
@@ -93,7 +89,7 @@ const AuthorPage: FC<AuthorPageProps> = ({
               />
             </svg>
             <span className="text-neutral-6000 dark:text-neutral-300">
-              {data?.phone}
+              {trainerDetail?.staff?.user?.phone}
             </span>
           </div>
 
@@ -113,7 +109,7 @@ const AuthorPage: FC<AuthorPageProps> = ({
               />
             </svg>
             <span className="text-neutral-6000 dark:text-neutral-300">
-              {data?.birth_date}
+              {trainerDetail?.staff?.user?.birth_date}
             </span>
           </div>
         </div>
@@ -125,9 +121,9 @@ const AuthorPage: FC<AuthorPageProps> = ({
     return (
       <div className="listingSection__wrap">
         <div>
-          <h2 className="text-2xl font-semibold">Danh sách dịch vụ</h2>
+          <h2 className="text-2xl font-semibold">Danh sách bài tập khả dụng</h2>
           <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-            50+ Dịch vụ
+            +{trainerDetail?.workouts?.length} bài tập
           </span>
         </div>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
@@ -140,7 +136,7 @@ const AuthorPage: FC<AuthorPageProps> = ({
             ))}
           </div>
           <div className="flex mt-11 justify-center items-center">
-            <ButtonSecondary>Show me more</ButtonSecondary>
+            <ButtonSecondary >Show me more</ButtonSecondary>
           </div>
 
         </div>

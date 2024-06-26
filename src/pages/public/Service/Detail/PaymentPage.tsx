@@ -1,84 +1,252 @@
 import { Tab } from "@headlessui/react";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { PostCreateBookingRequest, Session, postCreateBooking } from "api/booking";
 import { ServiceDataType } from "api/service";
-import { ParticipantsObject } from "components/HeroSearchForm2Mobile/ParticipantsInput";
 import Label from "components/Label/Label";
 import ModalSelectDate from "components/ModalSelectDate";
-import ModalSelectParticipants from "components/ModalSelectParticipants";
 import StartRating from "components/StartRating/StartRating";
 import mastercardPng from "images/mastercard.svg";
 import visaPng from "images/vis.png";
-import { FC, Fragment, useEffect } from "react";
+import moment from "moment";
+import { FC, Fragment, useState } from "react";
+import { useMutation } from "react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import Input from "shared/Input/Input";
 import NcImage from "shared/NcImage/NcImage";
 import NcModal from "shared/NcModal/NcModal";
 import { useAppDispatch, useAppSelector } from "states";
 import { selectAuthStatus } from "states/slices/auth";
-import { createBooking, selectBookingStatus } from "states/slices/booking";
-import { selectScheduleResults } from "states/slices/schedule";
-import { fetchServiceSchedule } from "states/slices/service";
 import convertMinuteToHour from "utils/converMinuteToHour";
 import convertNumbThousand from "utils/convertNumbThousand";
 
 export interface PaymentPageProps {
   className?: string;
   onClose?: () => void;
-  onChangeParticipants: (date: ParticipantsObject) => void;
-  defaultParticipants: ParticipantsObject
-  onChangeDate: (date: moment.Moment | null) => void;
-  defaultDate: moment.Moment | null;
+  onChangeEndDate: (date: moment.Moment | null) => void;
+  defaultEndDate: moment.Moment | null;
+  onChangeStartDate: (date: moment.Moment | null) => void;
+  defaultStartDate: moment.Moment | null;
   defaultService: ServiceDataType | undefined;
-  defaultTime: number;
-  onChangeTime: (time: number) => void;
+  sessions: Session[];
+  onChangeSessions: (data: any) => void;
 }
 
 
 const PaymentPage: FC<PaymentPageProps> = ({
   className = "",
   onClose,
-  onChangeParticipants,
-  defaultParticipants,
-  onChangeDate,
-  defaultDate,
+  onChangeEndDate,
+  defaultEndDate,
+  onChangeStartDate,
+  defaultStartDate,
   defaultService,
-  defaultTime,
-  onChangeTime
+  sessions,
+  onChangeSessions,
 }) => {
   const authStatus = useAppSelector(selectAuthStatus);
   const location = useLocation();
 
   const dispatch = useAppDispatch();
-  const timeArray = useAppSelector(selectScheduleResults);
   const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(fetchServiceSchedule({ id: defaultService?.id ?? "", date: defaultDate?.format("YYYY-MM-DD") ?? "" }));
-  }, [defaultService, defaultDate]);
+  const [errorDetails, setErrorDetails] = useState<{ note: string; reason: string }[]>([]);
+  const handleSubmit = async () => {
+    // kiểm tra nếu có trường hợp chưa điền đủ thông tin thì toast error
+    // sau đó return
+    console.log(sessions)
+    if (defaultStartDate == null || defaultEndDate == null) {
+      toast.error("Vui lòng chọn ngày bắt đầu và kết thúc");
+      return;
+    }
 
-  const handelSubmit = () => {
-    dispatch(createBooking({
-      schedule_id: timeArray[defaultTime].id,
-      participants: defaultParticipants.participants ?? 1,
-      note: ""
-    }));
+    if (defaultStartDate.isAfter(defaultEndDate)) {
+      toast.error("Ngày bắt đầu không thể sau ngày kết thúc");
+      return;
+    }
+
+    //không sử dụng ! vì có ngyaf chủ nhật = 0
+    if (sessions.some(session => session.trainingDay === undefined)) {
+      toast.error("Vui lòng chọn ngày cho tất cả các buổi tập");
+      return;
+    }
+
+    if (sessions.some(session => session.workouts.some(workout => !workout.trainingTime.start))) {
+      toast.error("Vui lòng chọn thời gian cho tất cả các buổi tập");
+      return;
+    }
+
+    const bookingData = {
+      startDate: defaultStartDate?.format("YYYY-MM-DD"),
+      endDate: defaultEndDate?.format("YYYY-MM-DD"),
+      serviceId: defaultService?.id,
+      trainingTimes: sessions.flatMap(session =>
+        session.workouts.map(workout => ({
+          dayOfWeek: session.trainingDay,
+          start_time: workout.trainingTime.start,
+          end_time: workout.trainingTime.end,
+          workout: workout.id,
+          trainer: workout.trainingTime.trainer
+        }))
+      )
+    } as PostCreateBookingRequest;
+
+    try {
+      const res = await createBookingMutation.mutateAsync(bookingData);
+      // Nếu thành công thì chuyển hướng đến trang thanh toán
+      if (res?.statusCode === 201) {
+        const navigationState = {
+          defaultService,
+          defaultStartDate: defaultStartDate?.format("YYYY-MM-DD"),
+          defaultEndDate: defaultEndDate?.format("YYYY-MM-DD"),
+          bookings: res.data
+        };
+        console.log('Navigation state:', navigationState);
+        navigate("/services/pay-done", { state: navigationState });
+      }
+    } catch (error: any) {
+      if (error?.response?.data?.details) {
+        setErrorDetails(error.response.data.details);
+      }
+      toast.error("Đặt lịch thất bại");
+    }
+
   };
 
-  const bookingStatus = useAppSelector(selectBookingStatus);
-  useEffect(() => {
-    if (bookingStatus === "success") {
-      navigate("/services/pay-done", {
-        state: {
-          defaultService,
-          defaultParticipants,
-          defaultDate: defaultDate ? defaultDate.format("DD MMM") : null,
-          defaultTime: timeArray[defaultTime]?.time || null,
+  const createBookingMutation = useMutation(postCreateBooking);
+
+  const handleTimeChange = (sessionId: number, workoutId: number, field: 'start' | 'workout', value: string | number) => {
+    const updatedSessions = sessions.map(session => {
+      if (session.id === sessionId) {
+        const updatedWorkouts = session.workouts.map(workout => {
+          if (workout.id === workoutId) {
+            const updatedWorkout = { ...workout, trainingTime: { ...workout.trainingTime, [field]: value } };
+            if (field === 'start' && typeof value === 'string') {
+              const workoutDuration = workout.duration;
+              const endTime = moment(value, 'HH:mm').add(workoutDuration, 'minutes').format('HH:mm');
+              updatedWorkout.trainingTime.end = endTime;
+            }
+            return updatedWorkout;
+          }
+          return workout;
+        });
+        return { ...session, workouts: updatedWorkouts };
+      }
+      return session;
+    });
+    onChangeSessions(updatedSessions);
+  };
+
+
+  const renderTrainingTimes = () => {
+    const daysOfWeek = [
+      { value: 1, label: 'Thứ 2' },
+      { value: 2, label: 'Thứ 3' },
+      { value: 3, label: 'Thứ 4' },
+      { value: 4, label: 'Thứ 5' },
+      { value: 5, label: 'Thứ 6' },
+      { value: 6, label: 'Thứ 7' },
+      { value: 0, label: 'Chủ nhật' },
+    ];
+    return (
+      <div>
+        {
+          errorDetails.map((error, index) => (
+            <div key={index} className="text-red-500">{error.note}-{error.reason}</div>
+          ))
         }
-      });
-    }
-  }, [bookingStatus, dispatch]);
 
-
+        {sessions.length > 0 && (
+          <div>
+            {sessions.map(session => (
+              <div key={session.id} className="mb-4">
+                <h3 className="text-lg font-medium">{session.name}</h3>
+                <div className="flex items-center mb-2">
+                  <label className="form-label mr-2 flex-shrink-0" style={{ width: '100px' }}>Chọn ngày:</label>
+                  <select
+                    className="form-control mr-2"
+                    onChange={(e) => {
+                      const newSession = sessions.map(s => {
+                        if (s.id === session.id) {
+                          return {
+                            ...s,
+                            trainingDay: parseInt(e.target.value)
+                          }
+                        }
+                        return s;
+                      });
+                      onChangeSessions(newSession);
+                    }}
+                  >
+                    <option value="">-- Chọn ngày --</option>
+                    {daysOfWeek.map(day => (
+                      <option key={day.value} value={day.value}>{day.label}</option>
+                    ))}
+                  </select>
+                </div>
+                {
+                  session.workouts.map(workout => (
+                    <div key={workout.id} className="mt-2">
+                      <label className="font-medium">{workout.name}</label>
+                      <div className="flex items-center mt-2">
+                        <input
+                          type="time"
+                          onChange={e => handleTimeChange(session.id, workout.id, 'start', e.target.value)}
+                          value={workout.trainingTime.start}
+                          className="form-control mr-2"
+                          placeholder="Thời gian bắt đầu"
+                        />
+                        <input
+                          disabled
+                          type="time"
+                          value={workout.trainingTime.end}
+                          className="form-control mr-2"
+                          placeholder="Thời gian kết thúc"
+                        />
+                        <select
+                          value={workout.trainingTime.trainer}
+                          className="form-control"
+                          onChange={(e) => {
+                            const newSession = sessions.map(s => {
+                              if (s.id === session.id) {
+                                return {
+                                  ...s,
+                                  workouts: s.workouts.map(w => {
+                                    if (w.id === workout.id) {
+                                      return {
+                                        ...w,
+                                        trainingTime: {
+                                          ...w.trainingTime,
+                                          trainer: parseInt(e.target.value)
+                                        }
+                                      }
+                                    }
+                                    return w;
+                                  })
+                                }
+                              }
+                              return s;
+                            });
+                            onChangeSessions(newSession);
+                          }}
+                        >
+                          <option value="">-- Chọn giáo viên --</option>
+                          {workout.trainers.map((trainer) => (
+                            <option key={trainer.id} value={trainer.id}>{trainer.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            ))}
+          </div>
+        )
+        }
+      </div >
+    );
+  }
   const renderSidebar = () => {
     return (
       <div className="w-full flex flex-col sm:rounded-2xl lg:border border-neutral-200 dark:border-neutral-700 space-y-6 sm:space-y-8 px-0 sm:p-6 xl:p-8">
@@ -106,10 +274,10 @@ const PaymentPage: FC<PaymentPageProps> = ({
         </div>
         <div className="flex flex-col space-y-4">
           <h3 className="text-2xl font-semibold">Thông tin giá cả</h3>
-          <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
+          {/* <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
             <span>{convertNumbThousand(defaultService?.price)} x {defaultParticipants.participants} Người </span>
             <span>{convertNumbThousand(defaultService?.price ?? 0 * (defaultParticipants?.participants ?? 0))}</span>
-          </div>
+          </div> */}
           <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
             <span>VAT</span>
             <span></span>
@@ -118,7 +286,7 @@ const PaymentPage: FC<PaymentPageProps> = ({
           <div className="border-b border-neutral-200 dark:border-neutral-700"></div>
           <div className="flex justify-between font-semibold">
             <span>Tổng tiền</span>
-            <span>{convertNumbThousand(defaultService?.price ?? 0 * (defaultParticipants?.participants ?? 0))}</span>
+            <span>{convertNumbThousand(defaultService?.price ?? 0)}</span>
           </div>
         </div>
       </div>
@@ -150,8 +318,8 @@ const PaymentPage: FC<PaymentPageProps> = ({
           </div>
           <div className="mt-6 border border-neutral-200 dark:border-neutral-700 rounded-3xl flex flex-col sm:flex-row divide-y sm:divide-x sm:divide-y-0 divide-neutral-200 dark:divide-neutral-700">
             <ModalSelectDate
-              defaultValue={defaultDate}
-              onSelectDate={(date) => { onChangeDate(date) }}
+              defaultValue={defaultStartDate}
+              onSelectDate={(date) => { onChangeStartDate(date) }}
               renderChildren={({ openModal }) => (
                 <button
                   onClick={openModal}
@@ -161,7 +329,7 @@ const PaymentPage: FC<PaymentPageProps> = ({
                   <div className="flex flex-col">
                     <span className="text-sm text-neutral-400">Ngày</span>
                     <span className="mt-1.5 text-lg font-semibold">
-                      {defaultDate ? defaultDate.format("DD MMM") : "Date"}
+                      {defaultStartDate ? defaultStartDate.format("DD MMM") : "Date"}
                     </span>
                   </div>
                   <PencilSquareIcon className="w-6 h-6 text-neutral-6000 dark:text-neutral-400" />
@@ -169,22 +337,19 @@ const PaymentPage: FC<PaymentPageProps> = ({
               )}
             />
 
-            <ModalSelectParticipants
-              defaultValue={defaultParticipants}
-              onChangeParticipants={onChangeParticipants}
-              max={defaultService?.maxParticipants ?? 20}
+            <ModalSelectDate
+              defaultValue={defaultEndDate}
+              onSelectDate={(date) => { onChangeEndDate(date) }}
               renderChildren={({ openModal }) => (
                 <button
-                  type="button"
                   onClick={openModal}
-                  className="text-left flex-1 p-5 flex justify-between space-x-5"
+                  className="text-left flex-1 p-5 flex justify-between space-x-5 "
+                  type="button"
                 >
                   <div className="flex flex-col">
-                    <span className="text-sm text-neutral-400">Người tham gia</span>
+                    <span className="text-sm text-neutral-400">Ngày</span>
                     <span className="mt-1.5 text-lg font-semibold">
-                      <span className="line-clamp-1">
-                        {`${defaultParticipants.participants} Người`}
-                      </span>
+                      {defaultEndDate ? defaultEndDate.format("DD MMM") : "Date"}
                     </span>
                   </div>
                   <PencilSquareIcon className="w-6 h-6 text-neutral-6000 dark:text-neutral-400" />
@@ -193,7 +358,7 @@ const PaymentPage: FC<PaymentPageProps> = ({
             />
           </div>
           <div className="mt-6 grid grid-cols-3 gap-6 md:gap-8 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">
-            {
+            {/* {
               timeArray.length === 0 ? (
                 <span className="col-span-3 font-semibold text-neutral-500 dark:text-neutral-400">
                   Không có lịch trình phù hợp vui lòng chọn ngày khác
@@ -212,9 +377,11 @@ const PaymentPage: FC<PaymentPageProps> = ({
                   </button>
                 ))
               )
-            }
+            } */}
           </div>
         </div>
+
+        {renderTrainingTimes()}
         {
           authStatus === "success" ? (
             <div>
@@ -287,13 +454,8 @@ const PaymentPage: FC<PaymentPageProps> = ({
                 </Tab.Group>
                 <div className="pt-8">
                   {/* <ButtonPrimary href={"/pay-done"}>Xác nhận và thanh toán</ButtonPrimary> */}
-                  {
-                    defaultParticipants && defaultDate && defaultService && timeArray[defaultTime] && (
-                      <ButtonPrimary onClick={handelSubmit}>Xác nhận và thanh toán</ButtonPrimary>
-                    ) || (
-                      <ButtonPrimary disabled >Xác nhận và thanh toán</ButtonPrimary>
-                    )
-                  }
+                  <ButtonPrimary onClick={handleSubmit}>Xác nhận và thanh toán</ButtonPrimary>
+
                 </div>
               </div>
             </div>

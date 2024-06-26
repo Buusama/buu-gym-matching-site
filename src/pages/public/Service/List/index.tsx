@@ -1,22 +1,21 @@
-import { TaxonomyType } from "assets/data/types";
+import { getTopServices } from "api/service";
 import BackgroundSection from "components/BackgroundSection/BackgroundSection";
 import BgGlassmorphism from "components/BgGlassmorphism/BgGlassmorphism";
 import SectionSliderNewCategories from "components/SectionSliderNewCategories/SectionSliderNewCategories";
 import { useEffect } from "react";
+import { useQuery } from 'react-query';
 import { useAppDispatch, useAppSelector } from "states";
 import { fetchService, selectServiceStatus } from "states/slices/service";
-import SectionGridFilterCard from "./SectionGridFilterCard";
-import { useQuery } from 'react-query';
-import { getTopServices } from "api/service";
 import { convertServiceDataTypeToTaxonomyType } from "utils/convertToNewFormat";
-import LoadingIcon from "shared/LoadingIcon/LoadingIcon";
+import SectionGridFilterCard from "./SectionGridFilterCard";
 
 function PageService() {
 
   const { data: servicesData, isLoading, isError } = useQuery("services", () => getTopServices(10));
-
+  
   //rename data, isLoading, isError
   const top10Services = convertServiceDataTypeToTaxonomyType(servicesData?.data || []);
+  
   // CUSTOM THEME STYLE
   useEffect(() => {
     const $body = document.querySelector("body");

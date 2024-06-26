@@ -21,8 +21,8 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   },
   {
     id: ncNanoId(),
-    href: "/member/booking-history",
-    name: "Lịch sử đặt lịch",
+    href: "/member/body-info",
+    name: "Thông số cơ thể",
     role: Role.MEMBER,
   },
   {
@@ -40,7 +40,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   {
     id: ncNanoId(),
     href: "/trainer/schedules",
-    name: "Lịch tập",
+    name: "Lịch dạy",
     role: Role.TRAINER,
   },
 ];

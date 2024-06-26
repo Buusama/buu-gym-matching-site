@@ -1,19 +1,14 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { getScheduleService } from "api/service";
+import { Session, TimeSlot, Workout } from "api/booking";
+import { getServiceSessions } from "api/service";
 import CommentListing from "components/CommentListing/CommentListing";
 import FiveStartIconForRate from "components/FiveStartIconForRate/FiveStartIconForRate";
-import ParticipantsInput from "components/HeroSearchForm/ParticipantsInput";
 import ServicesDateSingleInput from "components/HeroSearchForm/ServicesDateSingleInput";
 import StartRating from "components/StartRating/StartRating";
-import useWindowSize from "hooks/useWindowResize";
 import moment from "moment";
 import { FC, useEffect, useState } from "react";
-import {
-  DayPickerSingleDateController,
-  isInclusivelyAfterDay,
-} from "react-dates";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import Avatar from "shared/Avatar/Avatar";
 import ButtonCircle from "shared/Button/ButtonCircle";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import ButtonSecondary from "shared/Button/ButtonSecondary";
@@ -24,50 +19,75 @@ import { useAppDispatch, useAppSelector } from "states";
 import { fetchServiceById, selectServiceDetail } from "states/slices/service";
 import convertMinuteToHour from "utils/converMinuteToHour";
 import convertNumbThousand from "utils/convertNumbThousand";
-import MobileFooterSticky from "./MobileFooterSticky";
 import ModalPhotos from "./ModalPhotos";
 import ModalReserveMobile from "./ModalReserveMobile";
-import { useQuery } from "react-query";
+import MobileFooterSticky from "./MobileFooterSticky";
 
 export interface ListingServicesDetailPageProps {
   className?: string;
 }
-const trainer_demo = [
-  { name: "Võ Tá Hoan" },
-  { name: "Nguyễn Văn A" },
-  { name: "Trần Thị B" },
-  { name: "Phan Văn C" },
-  { name: "Võ Tắc Thiên" },
-  { name: "Võ Tá Huấn" },
-  { name: "Võ Tá Hoàng" },
-]
 
 const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
   className = "",
 }) => {
+
+
   const dispatch = useAppDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [openFocusIndex, setOpenFocusIndex] = useState(0);
-  const [selectedDate, setSelectedDate] = useState<moment.Moment | null>(
-    moment().add(2, "days")
-  );
-  const [selectedTime, setSelectedTime] = useState(0);
 
-  const [participants, setParticipants] = useState(1);
-  const windowSize = useWindowSize();
+  const [startDate, setStartDate] = useState<moment.Moment | null>(moment().add(7, "days"));
+  const [endDate, setEndDate] = useState<moment.Moment | null>(moment().add(7, "days"));
 
-  const getDaySize = () => {
-    if (windowSize.width <= 375) {
-      return 34;
-    }
-    if (windowSize.width <= 500) {
-      return undefined;
-    }
-    if (windowSize.width <= 1280) {
-      return 56;
-    }
-    return 48;
-  };
+  const [trainingTimes, setTrainingTimes] = useState<TimeSlot[][]>([
+    [], // Monday
+    [], // Tuesday
+    [], // Wednesday
+    [], // Thursday
+    [], // Friday
+    [], // Saturday
+    [], // Sunday
+  ]);
+  const [sessions, setSessions] = useState<Session[]>();
+
+
+  const { id } = useParams();
+  const { data: servicesData, isLoading, isError } = useQuery("services", () => getServiceSessions(id?.toString() || ""));
+  useEffect(() => {
+    console.log(servicesData);
+    const newSession = servicesData?.data.map((session) => {
+      return {
+        id: session.id,
+        name: session.name,
+        trainingDay: null,
+        workouts: session?.workouts?.map((workout: any) => ({
+          id: workout.id,
+          name: workout.name,
+          duration: workout.duration,
+          trainers: workout.trainers,
+          trainingTime: {
+            start: workout.trainingTime?.startTime,
+            end: workout.trainingTime?.endTime,
+            trainer: workout.trainingTime?.trainer,
+          },
+        }) as Workout)
+      } as Session;
+    });
+    setSessions(newSession);
+  }, [servicesData]);
+
+  // const getDaySize = () => {
+  //   if (windowSize.width <= 375) {
+  //     return 34;
+  //   }
+  //   if (windowSize.width <= 500) {
+  //     return undefined;
+  //   }
+  //   if (windowSize.width <= 1280) {
+  //     return 56;
+  //   }
+  //   return 48;
+  // };
 
   const handleOpenModal = (index: number) => {
     setIsOpen(true);
@@ -75,15 +95,12 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
   };
 
   const handleCloseModal = () => setIsOpen(false);
-  const { id } = useParams();
 
   useEffect(() => {
     dispatch(fetchServiceById(id?.toString() || ""));
   }, [dispatch, id]);
 
   const serviceResult = useAppSelector(selectServiceDetail);
-  const { data: serviceClassesData } = useQuery("serviceClasses", () => getScheduleService(id?.toString() || "", { date: selectedDate?.format("YYYY-MM-DD") || "" }));
-  const serviceClasses = serviceClassesData?.data || [];
   const renderBacsicInfoSerivce = () => {
     return (
       <div className="listingSection__wrap !space-y-6">
@@ -101,23 +118,6 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         {/* 3 */}
         <div className="flex items-center space-x-4">
           <StartRating />
-        </div>
-
-        {/* 4 */}
-        <span className="text-neutral-500 dark:text-neutral-400">
-          Các huấn luyện viên
-        </span>
-        <div className="flex flex-col lg:flex-row items-start lg:items-center">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-sm text-neutral-700 dark:text-neutral-300 ">
-            {trainer_demo
-              .filter((_, i) => i < 12)
-              .map((item, id) => (
-                <div key={item.name} className="flex items-center space-x-3">
-                  <Avatar hasChecked sizeClass="h-10 w-10 lg:h-12 lg:w-12" radius="rounded-full" />
-                  <span className="px-2.5 lg:mt-2.5 text-neutral-900 dark:text-neutral-200 font-medium">{item.name}</span>
-                </div>
-              ))}
-          </div>
         </div>
 
         {/* 5 */}
@@ -165,51 +165,30 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         </div>
         <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
         {/* 6 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-neutral-700 dark:text-neutral-300 ">
-          {serviceResult?.workouts
-            .filter((_, i) => i < 12)
-            .map((item) => (
-              <div key={item.id} className="flex items-center space-x-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-sm text-neutral-700 dark:text-neutral-300">
+          {serviceResult?.sessions
+            .filter((_, i) => i < 12) // Chỉ lấy 12 phiên tập đầu tiên
+            .map((session) => (
+              <div key={session.id} className="flex items-center space-x-3">
                 <i className="las la-check-circle text-2xl"></i>
-                <span>{item.name} - {item.duration} phút </span>
+                <div>
+                  <span className="font-medium">{session.name}</span>
+                  <p className="text-neutral-500 dark:text-neutral-400">{session.description}</p>
+                  <div className="flex flex-wrap">
+                    {session.workouts.map((workout) => (
+                      <div key={workout.id} className="flex items-center space-x-2 mb-1">
+                        {/* <img
+                          src={workout?.thumbnail}
+                          alt={workout?.name}
+                          className="w-8 h-8 rounded-full object-cover"
+                        /> */}
+                        <span className="text-neutral-500 dark:text-neutral-400">{`${workout.name} ,`}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
-        </div>
-      </div>
-    );
-  };
-
-  const renderSectionCheckIndate = () => {
-    return (
-      <div className="listingSection__wrap overflow-hidden">
-        {/* HEADING */}
-        <div>
-          <h2 className="text-2xl font-semibold">Lịch tập luyện</h2>
-          <span className="block mt-2 text-neutral-500 dark:text-neutral-400">
-            Chọn ngày bạn muốn tham gia
-          </span>
-        </div>
-        <div className="w-14 border-b border-neutral-200 dark:border-neutral-700"></div>
-        {/* CONTENT */}
-
-        <div className="listingSection__wrap__DayPickerRangeController flow-root">
-          <div className="-mx-4 sm:mx-auto xl:mx-[-22px]">
-            <DayPickerSingleDateController
-              date={selectedDate}
-              onDateChange={(date) => setSelectedDate(date)}
-              onFocusChange={() => { }}
-              focused
-              initialVisibleMonth={null}
-              numberOfMonths={windowSize.width < 1280 ? 1 : 2}
-              daySize={getDaySize()}
-              hideKeyboardShortcutsPanel={true}
-              isOutsideRange={(day) => !isInclusivelyAfterDay(day, moment())}
-              isDayBlocked={(day) => {
-                const dayStr = day.toDate().toDateString();
-                return !serviceClasses.some((item: any) => item.date === dayStr);
-              }}
-            />
-          </div>
         </div>
       </div>
     );
@@ -292,7 +271,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
             </ul>
           </div>
         </div> */}
-        {serviceResult?.workouts.map((item) => (
+        {serviceResult?.sessions?.map((item) => (
           <div key={item.id}>
             <div className="flex items-center space-x-3">
               <i className="las la-check-circle text-2xl"></i>
@@ -315,7 +294,7 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
           <span className="text-3xl font-semibold">
             {convertNumbThousand(serviceResult?.price)}{" VND"}
             <span className="ml-1 text-base font-normal text-neutral-500 dark:text-neutral-400">
-              /người
+              /tuần
             </span>
           </span>
           <StartRating />
@@ -325,45 +304,25 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
         <form className="flex flex-col sm:flex-row border divide-y sm:divide-y-0 sm:divide-x divide-neutral-200 dark:divide-neutral-700 border-neutral-200 dark:border-neutral-700 rounded-3xl ">
           <div className="flex-1">
             <ServicesDateSingleInput
-              defaultValue={selectedDate}
+              defaultValue={startDate}
               anchorDirection={"right"}
               fieldClassName="p-4"
               className="h-full"
             />
           </div>
           <div className="flex-1 listingServicesDetailPage__GuestsInput">
-            <ParticipantsInput
+            <ServicesDateSingleInput
+              defaultValue={endDate}
+              anchorDirection={"right"}
               fieldClassName="p-4"
-              defaultValue={{ participants }}
-              hasButtonSubmit={false}
-              onChange={(data) => setParticipants(data.participants || 1)}
+              className="h-full"
             />
           </div>
         </form>
 
         {/* SUM */}
-        <div className="flex flex-col space-y-4">
-          <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
-            <span>{`${convertNumbThousand(serviceResult?.price ?? 0)} x ${participants}`}</span>
-            <span>{convertNumbThousand((serviceResult?.price ?? 0) * participants)}{" VND"}</span>
-          </div>
-          <div className="flex justify-between text-neutral-6000 dark:text-neutral-300">
-            <span>VAT</span>
-            <span></span>
-          </div>
-          <div className="border-b border-neutral-200 dark:border-neutral-700"></div>
-          <div className="flex justify-between font-semibold">
-            <span>Tổng cộng</span>
-            <span>{convertNumbThousand((serviceResult?.price ?? 0) * participants)}{" VND"}</span>
-          </div>
-        </div>
-
         {/* SUBMIT */}
         <ModalReserveMobile
-          defaultParticipants={{ participants }}
-          defaultDate={selectedDate}
-          onChangeDate={(date) => setSelectedDate(date)}
-          onChangeParticipants={(data) => setParticipants(data?.participants || 0)}
           renderChildren={({ openModal }) => (
             <ButtonPrimary
               sizeClass="px-5 sm:px-7 py-3 !rounded-2xl"
@@ -373,8 +332,12 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
             </ButtonPrimary>
           )}
           defaultService={serviceResult}
-          defaultTime={selectedTime}
-          onChangeTime={(time) => setSelectedTime(time)}
+          defaultEndDate={endDate}
+          defaultStartDate={startDate}
+          onChangeEndDate={setEndDate}
+          onChangeStartDate={setStartDate}
+          sessions={sessions}
+          onChangeSessions={setSessions}
         />
       </div>
     );
@@ -461,7 +424,6 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
           {renderBacsicInfoSerivce()}
           {renderDesciptionService()}
           {renderIncludeService()}
-          {renderSectionCheckIndate()}
           {renderReviewService()}
           {renderSectionThingToKnow()}
         </div>
@@ -474,13 +436,13 @@ const ListingServicesDetailPage: FC<ListingServicesDetailPageProps> = ({
 
       {/* STICKY FOOTER MOBILE */}
       <MobileFooterSticky
-        selectedDate={selectedDate}
-        onChangeDate={setSelectedDate}
+        startDate={startDate}
+        onChangeStartDate={setStartDate}
+        endDate={endDate}
+        onChangeEndDate={setEndDate}
         defaultService={serviceResult}
-        defaultParticipants={{ participants }}
-        onChangeParticipants={(data) => setParticipants(data.participants || 1)}
-        defaultTime={selectedTime}
-        onChangeTime={(time) => setSelectedTime(time)}
+        sessions={sessions}
+        onChangeSessions={setSessions}
       />
 
       {/* OTHER SECTION */}

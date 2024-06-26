@@ -8,7 +8,9 @@ export const endpoint = {
         getList: "/services",
         getTop: "/services/top",
         getDetail: (id: string | number) => `/services/${id}`,
-        getScheduleService: (id: string | number) => `/services/${id}/service_classes`,
+        session: (id: string) => `/services/${id}/sessions`,
+        workout: (id: string, session_id: string) => `/services/${id}/sessions/${session_id}/workouts`,
+
     },
     trainer: {
         getList: "/trainers",
@@ -23,5 +25,13 @@ export const endpoint = {
         memberList: "/service_classes/member",
         trainerList: "/service_classes/trainer",
         getDetail: (id: string | number) => `/service_classes/${id}`,
-    }
+    },
+    workout: {
+        getList: "/workouts",
+        getDetail: (id: string | number) => `/workouts/${id}`,
+    },
+    member: {
+        getDetail: (id: string | number) => `/members/${id}`,
+        getBody : (id: string | number) => `/members/${id}/measurements`,
+    },
 }

@@ -25,6 +25,7 @@ const configureAxios = () => {
         // Redirect to the 403 error page
         window.location.href = '/403';
       }
+      
       return Promise.reject(error);
     }
   );

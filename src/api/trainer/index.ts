@@ -20,18 +20,23 @@ export interface TrainerDataType {
 
 
 export const getListTrainers = async (
-    request: FilterTrainer
+    request?: FilterTrainer
 ): Promise<{ data: any[]; meta: PaginationType }> => {
     const response = await axiosInstance.get(endpoint.trainer.getList, {
         params: {
             ...request,
-            ...request.page,
+            ...request?.page,
         },
     });
     return response.data;
 }
 
-export const getDetailTrainer = async (id: string | number): Promise<{ data: TrainerDataType }> => {
+export const getDetailTrainer = async (id: string | number) => {
     const response = await axiosInstance.get(endpoint.trainer.getDetail(id));
+    return response.data;
+}
+
+export const getListTrainersSelect = async () => {
+    const response = await axiosInstance.get(endpoint.trainer.getList, {});
     return response.data;
 }

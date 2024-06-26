@@ -11,6 +11,12 @@ export interface WorkoutDataType {
     description: string | null;
     thumbnail: string | null;
 }
+export interface SessionDataType {
+    id: string | number;
+    name: string;
+    description: string | null;
+    workouts: WorkoutDataType[];
+}
 export interface ServiceDataType {
     id: string | number;
     name: string;
@@ -19,7 +25,7 @@ export interface ServiceDataType {
     description: string | null;
     maxParticipants: number;
     serviceGallaryImages: string[];
-    workouts: WorkoutDataType[];
+    sessions: SessionDataType[];
     bookingCount?: number;
     thumbnail?: string | null;
     serviceType?: number;
@@ -27,17 +33,6 @@ export interface ServiceDataType {
 
 export interface GetListServicesRequest {
     filter: FilterService;
-}
-
-export interface ServiceScheduleDataType {
-    id: string | number;
-    date: string;
-    time: Moment | null;
-    service?: ServiceDataType;
-}
-
-export interface GetScheduleServiceRequest {
-    date: string;
 }
 
 export const getListServices = async (
@@ -57,16 +52,6 @@ export const getDetailService = async (id: string | number): Promise<{ data: Ser
     return response.data;
 }
 
-export const getScheduleService = async (
-    id: string | number,
-    request: GetScheduleServiceRequest
-): Promise<{ data: ServiceScheduleDataType[] }> => {
-    const response = await axiosInstance.get(endpoint.services.getScheduleService(id), {
-        params: request,
-    });
-    return response.data;
-}
-
 export const getTopServices = async (
     limit: number
 ): Promise<{ data: ServiceDataType[] }> => {
@@ -75,5 +60,12 @@ export const getTopServices = async (
             limit,
         },
     });
+    return response.data;
+}
+
+export const getServiceSessions = async (
+    id: string | number
+): Promise<{ data: SessionDataType[] }> => {
+    const response = await axiosInstance.get(endpoint.services.session(id.toString()));
     return response.data;
 }

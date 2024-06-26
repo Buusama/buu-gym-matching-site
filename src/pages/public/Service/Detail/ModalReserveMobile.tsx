@@ -3,29 +3,30 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { ParticipantsObject } from "components/HeroSearchForm2Mobile/ParticipantsInput";
 import React, { FC, Fragment, useState } from "react";
 import PaymentPage from "./PaymentPage";
+import { Session, TimeSlot } from "api/booking";
 
 interface ModalReserveMobileProps {
   onClose?: () => void;
-  onChangeParticipants: (date: ParticipantsObject) => void;
-  onChangeDate: (date: moment.Moment | null) => void;
-  defaultParticipants: ParticipantsObject
-  defaultDate: moment.Moment | null;
+  onChangeStartDate: (date: moment.Moment | null) => void;
+  defaultStartDate: moment.Moment | null;
   renderChildren?: (p: { openModal: () => void }) => React.ReactNode;
   defaultService: any;
-  defaultTime: number;
-  onChangeTime: (time: number) => void;
+  defaultEndDate: moment.Moment | null;
+  onChangeEndDate: (date: moment.Moment | null) => void;
+  sessions: any;
+  onChangeSessions: (data: Session[]) => void;
 }
 
 const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
   onClose,
-  onChangeParticipants,
-  onChangeDate,
-  defaultParticipants,
-  defaultDate,
+  onChangeStartDate,
+  defaultStartDate,
   renderChildren,
   defaultService,
-  defaultTime,
-  onChangeTime
+  defaultEndDate,
+  onChangeEndDate,
+  sessions,
+  onChangeSessions,
 }) => {
   const [showModal, setShowModal] = useState(false);
   // FOR RESET ALL DATA WHEN CLICK CLEAR BUTTON
@@ -80,13 +81,14 @@ const ModalReserveMobile: FC<ModalReserveMobileProps> = ({
                     <div className="flex-1 pt-12 py-1 flex flex-col ">
                       <div className="flex-1 bg-white dark:bg-neutral-900">
                         <PaymentPage
-                          onChangeParticipants={onChangeParticipants}
-                          onChangeDate={onChangeDate}
-                          defaultParticipants={defaultParticipants}
-                          defaultDate={defaultDate}
                           defaultService={defaultService}
-                          defaultTime={defaultTime}
-                          onChangeTime={onChangeTime}
+                          defaultStartDate={defaultStartDate}
+                          onChangeStartDate={onChangeStartDate}
+                          defaultEndDate={defaultEndDate}
+                          onChangeEndDate={onChangeEndDate}
+                          sessions={sessions}
+                          onChangeSessions={onChangeSessions}
+                          onClose={closeModal}
                         />
                       </div>
                     </div>
