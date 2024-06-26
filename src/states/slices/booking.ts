@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { BookingDataType, postCreateBooking } from "api/booking";
-import { RootState } from ".."
+import { RootState } from "../types"
 
 interface BookingState {
     status: "loading" | "success" | "error" | "idle";

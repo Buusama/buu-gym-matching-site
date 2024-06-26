@@ -5,7 +5,7 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import { RootState } from "..";
+import { RootState } from "../types";
 type AuthForm = {
   username: string;
   email: string;

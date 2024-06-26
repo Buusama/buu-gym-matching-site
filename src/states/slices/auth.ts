@@ -3,7 +3,7 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import { RootState } from "..";
+import { RootState } from "../types";
 import { GetMeResponse, getMe, postLogout } from "api/auth";
 
 interface AuthState {

@@ -4,6 +4,7 @@ import authForm from "./slices/authForm";
 import service from "./slices/service";
 import trainer from "./slices/trainer";
 import booking from "./slices/booking";
+
 const store = configureStore({
   reducer: {
     auth,
@@ -13,6 +14,6 @@ const store = configureStore({
     booking,
   },
 });
-export type RootState = ReturnType<typeof store.getState>;
+
 export type AppDispatch = typeof store.dispatch;
 export default store;
