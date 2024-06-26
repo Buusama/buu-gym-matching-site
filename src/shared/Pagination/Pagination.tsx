@@ -53,7 +53,7 @@ const Pagination: FC<PaginationProps> = ({
     const start = Math.max(0, currentPage - Math.floor(MAX_DISPLAY_PAGES / 2));
     const end = Math.min(lastPage, start + MAX_DISPLAY_PAGES - 1);
 
-    const pages = [];
+    const pages: number[] = [];
     for (let i = start; i <= end; i++) {
       pages.push(i);
     }
