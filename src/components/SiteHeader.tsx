@@ -1,7 +1,6 @@
 import Header from "components/Header/Header";
 import Header3 from "components/Header/Header3";
 import React, { useEffect } from "react";
-import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 import { PathName } from "routers/types";
 
@@ -66,9 +65,6 @@ const SiteHeader = () => {
 
   return (
     <>
-      <Helmet>
-        <title>BuuGym | Phòng tập uy tín</title>
-      </Helmet>
       {renderHeader()}
       <div ref={anchorRef} className="h-1 absolute invisible"></div>
     </>

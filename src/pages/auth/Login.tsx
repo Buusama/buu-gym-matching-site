@@ -2,7 +2,6 @@ import facebookSvg from "images/Facebook.svg";
 import googleSvg from "images/Google.svg";
 import twitterSvg from "images/Twitter.svg";
 import { FC } from "react";
-// import { Helmet } from "react-helmet";
 import { useForm, } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
