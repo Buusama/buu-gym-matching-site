@@ -5,7 +5,7 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import { RootState } from "../types";
+import { IRootState } from "../types";
 type AuthForm = {
   username: string;
   email: string;
@@ -54,7 +54,7 @@ export const authFormSlice = createSlice({
         state.errors = action.payload as Partial<AuthForm>;
       }),
 });
-export const selectAuthForm = (state: RootState) => state.authForm;
+export const selectAuthForm = (state: IRootState) => state.authForm;
 export const selectAuthFormValue = createSelector(
   selectAuthForm,
   (state) => state.form,

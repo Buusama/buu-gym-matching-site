@@ -3,9 +3,8 @@
     "composite": true,
     "skipLibCheck": true,
     "module": "ESNext",
-    "moduleResolution": "node",         // Đảm bảo moduleResolution là 'node'
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true           // Sử dụng resolveJsonModule nếu cần
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
   },
   "include": ["vite.config.ts"]
 }

@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { TrainerDataType, getDetailTrainer, getListTrainers } from "api/trainer";
 import { PageType, PaginationType } from "contains/type";
-import { RootState } from "../types";
+import { IRootState } from "../types";
 
 export type FilterTrainer = Pick<
     TrainerDataType,
@@ -51,7 +51,7 @@ export const fetchTrainer = createAsyncThunk("trainer/fetchTrainer",
         _: void,
         thunkApi,
     ) => {
-        const state = thunkApi.getState() as RootState;
+        const state = thunkApi.getState() as IRootState;
         const filter = state.trainer.filter;
         const response = await getListTrainers(filter);
         return response;
@@ -92,7 +92,7 @@ export const trainerSlice = createSlice({
                 state.status = "error";
             }),
 });
-export const selectTrainer = (state: RootState) => state.trainer;
+export const selectTrainer = (state: IRootState) => state.trainer;
 export const selectTrainerResults = createSelector(
     selectTrainer,
     (trainer) => trainer.results

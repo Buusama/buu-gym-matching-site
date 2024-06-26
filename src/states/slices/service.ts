@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { ServiceDataType, getDetailService, getListServices } from "api/service";
 import { PageType, PaginationType } from "contains/type";
-import { RootState } from "../types";
+import { IRootState } from "../types";
 
 export type FilterService = {
     page?: PageType;
@@ -47,7 +47,7 @@ export const fetchService = createAsyncThunk("service/fetchService",
         _: void,
         thunkApi,
     ) => {
-        const state = thunkApi.getState() as RootState;
+        const state = thunkApi.getState() as IRootState;
         const filter = state.service.filter;
 
         const response = await getListServices({ filter });
@@ -90,7 +90,7 @@ export const serviceSlice = createSlice({
                 state.status = "error";
             }),
 });
-export const selectService = (state: RootState) => state.service;
+export const selectService = (state: IRootState) => state.service;
 export const selectServiceResults = createSelector(
     selectService,
     (service) => service.results,

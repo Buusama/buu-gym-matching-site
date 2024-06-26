@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { BookingDataType, postCreateBooking } from "api/booking";
-import { RootState } from "../types"
+import { IRootState } from "../types"
 
 interface BookingState {
     status: "loading" | "success" | "error" | "idle";
@@ -38,7 +38,7 @@ export const bookingSlice = createSlice({
                 state.status = "error";
             }),
 });
-export const selectBooking = (state: RootState) => state.booking;
+export const selectBooking = (state: IRootState) => state.booking;
 export const selectBookingResults = createSelector(
     selectBooking,
     (booking) => booking.results,

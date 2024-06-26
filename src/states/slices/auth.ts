@@ -3,7 +3,7 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import { RootState } from "../types";
+import { IRootState } from "../types";
 import { GetMeResponse, getMe, postLogout } from "api/auth";
 
 interface AuthState {
@@ -42,7 +42,7 @@ export const authSlice = createSlice({
         state.userInfo = null;
       }),
 });
-export const selectAuth = (state: RootState) => state.auth;
+export const selectAuth = (state: IRootState) => state.auth;
 export const selectAuthStatus = createSelector(
   selectAuth,
   (auth) => auth.status,
