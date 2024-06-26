@@ -9,11 +9,11 @@
     "noUnusedLocals": false, // Tắt cảnh báo về biến không sử dụng
     "noUnusedParameters": false, // Tắt cảnh báo về tham số không sử dụng
     "noImplicitAny": false, // Tắt cảnh báo khi không có kiểu dữ liệu ngầm định
+    "isolatedModules": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
